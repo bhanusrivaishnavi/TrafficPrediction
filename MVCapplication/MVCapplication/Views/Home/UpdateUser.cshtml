@@ -1,0 +1,33 @@
+﻿@using System.Data
+@using System.Data.SqlClient
+@model System.Data.DataTable
+@{
+    ViewBag.Title = "User Management";
+}
+<html>
+
+<head>
+    <script type="text/javascript">
+
+    </script>
+</head>
+
+<body>
+    <form id="frmDetail" method="post" action="@Url.Action(" UpdateRecord")">
+        User Name<input name="txtuser" value="@Model.Rows[0]["UserName"]" />
+        <br />
+        First Name<input name="txtfName" value="@Model.Rows[0]["FullName"]" />
+        <br />
+        Last Name<input name="txtlName" value="@Model.Rows[0]["FullName"]" />
+        <br />
+        Email Address<input name="txtEmail" value="@Model.Rows[0]["Email"]" />
+        <br />
+        Change Password<input type="password" name="txtPswd" />
+        <br />
+        Contact Number<input name="txtPhno" value="@Model.Rows[0]["PhoneNumber"]" />
+        <br />
+        <input type="submit" value="Update" name="action" />
+    </form>
+</body>
+
+</html>
