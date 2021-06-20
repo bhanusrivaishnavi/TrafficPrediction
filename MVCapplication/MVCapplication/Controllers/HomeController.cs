@@ -24,6 +24,11 @@ namespace MVCapplication.Controllers
             return View();
         }
 
+        public IActionResult UpdateUser()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -34,31 +39,23 @@ namespace MVCapplication.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [HttpPost]
+        public ActionResult UpdateRecord(IFormCollection frm, string action)
+        {
+            Console.WriteLine("Controller class");
+            if (action == "Submit")
+            {
+                UpdateUser model = new UpdateUser();
+                string previousname = frm["txtuser"];
+                string name = frm["txtFName"] + frm["txtLName"];
+                string email = Convert.ToString(frm["txtEmail"]);
+                string password = frm["password"];
+                string phno = frm["txtPhno"];
+                int status = model.Update(previousname, name, email, password, phno);
+                Console.WriteLine(status);
+            }
+            return View();
+        }
 
-       
-    }
-
-    public class UpdateController 
-    {
-        //public IActionResult UpdateRecord(FormCollection frm, string action)
-        //{
-        //    Console.WriteLine("Controller class");
-        //    if (action == "Submit")
-        //    {
-        //        UpdateUser model = new UpdateUser();
-        //        string previousname = frm["txtuser"];
-        //        string name = frm["txtFName"] + frm["txtLName"];
-        //        string email = Convert.ToString(frm["txtEmail"]);
-        //        string password = frm["password"];
-        //        string phno = frm["txtPhno"];
-        //        int status = model.Update(previousname, name, email, password, phno);
-        //        Console.WriteLine(status);
-        //    }
-
-        //    return View();
-            
-        //}
-
-      
     }
 }

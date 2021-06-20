@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model UpdateUser
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<html>
+
+<head>
+    <script type="text/javascript">
+        var user =@User.Identity.Name;
+    </script>
+</head>
+
+<body>
+    <br /><br />
+    <div class="row">
+        <div class="col-md-6">
+            <form id="frmDetail" method="post">
+                <label>User Name</label><input size="150" name="txtuser" asp-for="@User.Identity.Name" asp-validation-for="Input.UserName" disabled />
+                <br />
+                <label>First Name</label><input size="150" name="txtfName" asp-for="Input.FullName" />
+                <br />
+                <label>Last Name</label><input size="150" name="txtlName" asp-for="Input.FullName" />
+                <br />
+                <label>Email Address</label><input size="150" name="txtEmail" asp-for="Input.Email" />
+                <br />
+                <label>Change Password</label><input size="150" type="password" name="txtPswd" asp-for="Input.Password" />
+                <br />
+                <label>Contact Number</label><input size="150" name="txtPhno" asp-for="Input.PhoneNumber" />
+                <br />  <br />
+                <input type="submit" class="btn btn-info" value="Update" name="action" />
+                <br />
+            </form>
+        </div>
+        </div>
+</body>
+
+</html>
