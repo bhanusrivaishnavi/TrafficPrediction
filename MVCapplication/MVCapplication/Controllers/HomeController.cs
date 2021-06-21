@@ -51,8 +51,9 @@ namespace MVCapplication.Controllers
                 string email = Convert.ToString(frm["txtEmail"]);
                 string password = frm["password"];
                 string phno = frm["txtPhno"];
-                int status = model.Update(previousname, name, email, password, phno);
-                Console.WriteLine(status);
+                Console.WriteLine(frm["txtuser"]+"PreviousName:"+previousname+"\n"+name + "\n" + email + "\n" + password + "\n" + phno);
+                string status=model.Update(previousname, name, email, password, phno);
+               Console.WriteLine(status);
             }
             return View();
         }

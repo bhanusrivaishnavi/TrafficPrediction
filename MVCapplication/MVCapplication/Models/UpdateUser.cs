@@ -12,14 +12,24 @@ using static Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal.External
 
 namespace MVCapplication.Models
 {
-    public class UpdateUser :IdentityUser
+    public class UpdateUser : IdentityUser
     {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        public UpdateUser()
+        { }
+
+        public UpdateUser(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+        public string Username { get; set; }
         [BindProperty]
         public InputModel Input { get; set; }
-  
+
         public class InputModel
         {
-        
             [Required]
             [Display(Name = "Name")]
             public string FullName { get; set; }
@@ -30,68 +40,50 @@ namespace MVCapplication.Models
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
 
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
-    
+
         }
-        
-        public int Update(string previousname, string name, string email, string password, string phno)
+        [HttpPost]
+        public string Update(string previousname, string name, string email, string password, string phno)
         {
             Console.WriteLine("Model class");
-            // //string strConString = "data source=DESKTOP-JUH932N/SQLEXPRESS;Initial Catalog=user;Integrated Security=True";
-            // SqlConnection sqlConnection = new SqlConnection("data source=DESKTOP-JUH923N/SQLEXPRESS; database=user; integrated security=True");
-            // //using SqlConnection con = sqlConnection;
-
-            // //string query = "INSERT INTO UserRegister(Name,Email,Password) VALUES(Name, Email, Password)";
-            // //using (SqlCommand cmd = new SqlCommand(query))
-            // //{
-            // //    cmd.Connection = con;
-
-            // //    con.Open();
-            // using SqlConnection con = sqlConnection;
-            // string query = "Update AspNetUsers SET FullName=@name, Email=@email ," +
-            //         " UserName=@email ,PasswordHash=@password ,Phonenumber=@phno" +
-            //         " where UserName=@previousname";
-            //// SqlCommand cmd = new SqlCommand(query);
-            // using (SqlCommand cmd = new SqlCommand(query))
-            // { 
-
-            //     cmd.Connection = con;
-            //     con.Open();
-            //     cmd.Parameters.AddWithValue("@name", name);
-            //     cmd.Parameters.AddWithValue("@email", email);
-            //     cmd.Parameters.AddWithValue("@password", password);
-            //     cmd.Parameters.AddWithValue("@phno", phno);
-            //     cmd.Parameters.AddWithValue("@previousname", previousname);
-            //     Console.WriteLine(cmd.ExecuteNonQuery());
-            //     return cmd.ExecuteNonQuery();
-            // }
-            //string status = "";
-            SqlConnection sqlConnection = new SqlConnection("data source=DESKTOP-JUH932N/SQLEXPRESS;database=user; integrated security=True");
-            using SqlConnection con = sqlConnection;
             string query = "Update AspNetUsers SET FullName=@name, Email=@email ," +
-                     " UserName=@email ,PasswordHash=@password ,Phonenumber=@phno" +
+                     " UserName=@email,Phonenumber=@phno" +
                      " where UserName=@previousname";
-            //string query = "INSERT INTO UserRegister(Name,Email,Password) VALUES(Name, Email, Password)";
-            using (SqlCommand cmd = new SqlCommand(query))
+            using (SqlConnection con = new SqlConnection("data source=DESKTOP-JUH932N\\SQLEXPRESS;Database=user;integrated security=SSPI"))
             {
-                cmd.Connection = con;
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                  
+                    con.Open();
 
-                con.Open();
-
-                //cmd.Parameters.AddWithValue("@Name", user.Name);
-                //cmd.Parameters.AddWithValue("@Email", user.Email);
-                //cmd.Parameters.AddWithValue("@Password", user.Password);
-                Console.WriteLine(cmd.ExecuteNonQuery());
-
-                return cmd.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@email", email);
+                    //cmd.Parameters.AddWithValue("@password", password);
+                    cmd.Parameters.AddWithValue("@phno", phno);
+                    cmd.Parameters.AddWithValue("@previousname", previousname);
+                    string status = (cmd.ExecuteNonQuery()).ToString();
+                    //string status = (cmd.ExecuteNonQuery() >= 1) ? "Record is saved Successfully!" : "Record is not saved";
+                    //     Console.WriteLine(cmd.ExecuteNonQuery());
+                    return status;
+                }
             }
-            
+        }
+        [HttpGet]
+        public void Update()
+        {
+
         }
     }
 }
+//cmd.Parameters.AddWithValue("@name", name);
+//cmd.Parameters.AddWithValue("@email", email);
+//cmd.Parameters.AddWithValue("@password", password);
+//cmd.Parameters.AddWithValue("@phno", phno);
+//cmd.Parameters.AddWithValue("@previousname", previousname);

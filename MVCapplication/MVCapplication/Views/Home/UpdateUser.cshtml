@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
+
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 @model UpdateUser
@@ -19,20 +20,24 @@
     <div class="row">
         <div class="col-md-6">
             <form id="frmDetail" method="post" action="UpdateRecord">
-                <label>User Name</label><input size="150" name="txtuser" asp-for="@User.Identity.Name" asp-validation-for="Input.UserName" disabled />
-                <br />
-                <label>First Name</label><input size="150" name="txtfName" asp-for="Input.FullName" />
-                <br />
-                <label>Last Name</label><input size="150" name="txtlName" asp-for="Input.FullName" />
-                <br />
-                <label>Email Address</label><input size="150" name="txtEmail" asp-for="Input.Email" />
-                <br />
-                <label>Change Password</label><input size="150" type="password" name="txtPswd" asp-for="Input.Password" />
-                <br />
-                <label>Contact Number</label><input size="150" name="txtPhno" asp-for="Input.PhoneNumber" />
-                <br />  <br />
-                <input type="submit" class="btn btn-info" value="Update" name="action" />
-                <br />
+                
+                    <label>User Name</label><input size="150" name="txtuser" asp-for="@User.Identity.Name" value="@User.Identity.Name" asp-validation-for="Input.UserName" readonly />
+                    <br />
+                    <label>First Name</label><input size="150" name="txtfName" asp-for="Input.FullName" value="Input.FullName" asp-validation-for="Input.FullName" />
+                    <br />
+                    <label>Last Name</label><input size="150" name="txtlName" />
+                    <br />
+                    <label>Email Address</label><input size="150" name="txtEmail" asp-for="Input.Email" value="Input.Email" asp-validation-for="Input.Email" />
+                    <br />
+                    <label>Change Password</label><input size="150" name="txtPswd" asp-for="Input.Password" value="Input.Password" asp-validation-for="Input.Password" />
+                    <br />
+                    <label>Contact Number</label><input size="150" name="txtPhno" asp-for="Input.PhoneNumber" value="Input.Name" asp-validation-for="Input.UserName" />
+                    <br />  <br />
+                    <input type="submit" class="btn btn-info" value="Update" name="action" />
+
+                    <br />
+               
+              
             </form>
         </div>
         </div>
