@@ -40,10 +40,10 @@ namespace MVCapplication.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         [HttpPost]
-        public ActionResult UpdateRecord(IFormCollection frm, string action)
+        public IActionResult UpdateRecord(IFormCollection frm, string action)
         {
-            Console.WriteLine("Controller class");
-            if (action == "Submit")
+            Console.WriteLine("Controller class"+action);
+            if (action == "Update")
             {
                 UpdateUser model = new UpdateUser();
                 string previousname = frm["txtuser"];

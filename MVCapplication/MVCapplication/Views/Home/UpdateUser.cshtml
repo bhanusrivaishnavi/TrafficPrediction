@@ -18,7 +18,7 @@
     <br /><br />
     <div class="row">
         <div class="col-md-6">
-            <form id="frmDetail" method="post">
+            <form id="frmDetail" method="post" action="UpdateRecord">
                 <label>User Name</label><input size="150" name="txtuser" asp-for="@User.Identity.Name" asp-validation-for="Input.UserName" disabled />
                 <br />
                 <label>First Name</label><input size="150" name="txtfName" asp-for="Input.FullName" />

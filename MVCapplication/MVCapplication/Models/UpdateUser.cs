@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using MVCapplication.Data.Migrations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,13 +12,14 @@ using static Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal.External
 
 namespace MVCapplication.Models
 {
-    public class UpdateUser
+    public class UpdateUser :IdentityUser
     {
         [BindProperty]
         public InputModel Input { get; set; }
-
+  
         public class InputModel
         {
+        
             [Required]
             [Display(Name = "Name")]
             public string FullName { get; set; }
@@ -33,30 +37,61 @@ namespace MVCapplication.Models
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
-
-
-
+    
         }
+        
         public int Update(string previousname, string name, string email, string password, string phno)
         {
             Console.WriteLine("Model class");
-            string strConString = @"DESKTOP-JUH932N\SQLEXPRESS;Initial Catalog=user;Integrated Security=True";
+            // //string strConString = "data source=DESKTOP-JUH932N/SQLEXPRESS;Initial Catalog=user;Integrated Security=True";
+            // SqlConnection sqlConnection = new SqlConnection("data source=DESKTOP-JUH923N/SQLEXPRESS; database=user; integrated security=True");
+            // //using SqlConnection con = sqlConnection;
 
-            using (SqlConnection con = new SqlConnection(strConString))
+            // //string query = "INSERT INTO UserRegister(Name,Email,Password) VALUES(Name, Email, Password)";
+            // //using (SqlCommand cmd = new SqlCommand(query))
+            // //{
+            // //    cmd.Connection = con;
+
+            // //    con.Open();
+            // using SqlConnection con = sqlConnection;
+            // string query = "Update AspNetUsers SET FullName=@name, Email=@email ," +
+            //         " UserName=@email ,PasswordHash=@password ,Phonenumber=@phno" +
+            //         " where UserName=@previousname";
+            //// SqlCommand cmd = new SqlCommand(query);
+            // using (SqlCommand cmd = new SqlCommand(query))
+            // { 
+
+            //     cmd.Connection = con;
+            //     con.Open();
+            //     cmd.Parameters.AddWithValue("@name", name);
+            //     cmd.Parameters.AddWithValue("@email", email);
+            //     cmd.Parameters.AddWithValue("@password", password);
+            //     cmd.Parameters.AddWithValue("@phno", phno);
+            //     cmd.Parameters.AddWithValue("@previousname", previousname);
+            //     Console.WriteLine(cmd.ExecuteNonQuery());
+            //     return cmd.ExecuteNonQuery();
+            // }
+            //string status = "";
+            SqlConnection sqlConnection = new SqlConnection("data source=DESKTOP-JUH932N/SQLEXPRESS;database=user; integrated security=True");
+            using SqlConnection con = sqlConnection;
+            string query = "Update AspNetUsers SET FullName=@name, Email=@email ," +
+                     " UserName=@email ,PasswordHash=@password ,Phonenumber=@phno" +
+                     " where UserName=@previousname";
+            //string query = "INSERT INTO UserRegister(Name,Email,Password) VALUES(Name, Email, Password)";
+            using (SqlCommand cmd = new SqlCommand(query))
             {
+                cmd.Connection = con;
+
                 con.Open();
-                string query = "Update AspNetUsers SET FullName=@name, Email=@email ," +
-                    " UserName=@email ,PasswordHash=@password ,Phonenumber=@phno" +
-                    " where UserName=@previousname";
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@email", email);
-                cmd.Parameters.AddWithValue("@password", password);
-                cmd.Parameters.AddWithValue("@phno", phno);
-                cmd.Parameters.AddWithValue("@previousname", previousname);
+
+                //cmd.Parameters.AddWithValue("@Name", user.Name);
+                //cmd.Parameters.AddWithValue("@Email", user.Email);
+                //cmd.Parameters.AddWithValue("@Password", user.Password);
                 Console.WriteLine(cmd.ExecuteNonQuery());
+
                 return cmd.ExecuteNonQuery();
             }
+            
         }
     }
 }
