@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model FileUpload
+@{
+    ViewData["Title"] = "Upload File";
+}
+
+<html>
+
+<head>
+    <script type="text/javascript">
+        var user =@User.Identity.Name;
+    </script>
+</head>
+
+<body>
+    <br /><br />
+    <div class="container">
+        <div class="jumbotron col-md-8 mx-auto mt-8">
+            <h1>Welcome to Application</h1>
+            <h5>Traffic Prediction</h5>
+            <!--
+            <a class="nav-link" asp-page="/SignIn">Sign In</a>
+            <a class="nav-link" asp-page="/SignUp">Sign Up</a> -->
+        </div>
+    </div>
+    <script src="~/js/site.js"></script>
+    <form method="post" asp-controller="FileUpload" asp-action="UploadFiles" enctype="multipart/form-data">
+
+        <div class="col-md-10 mx-auto mt-8 form-group row">
+            <div class="input-group-prepend">
+                <button class="input-group-text" id="inputGroupFileAddon01">Upload</button>
+            </div>
+            <div class="col-md-10 mx-auto mt-9">
+                
+                <div class="custom-file" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                    <input class="form-control custom-file-input" type="file" name="file" />
+                    <label class="custom-file-label">Browse....</label>
+                    <!-- <button type="submit">Upload</button>  -->
+                </div>
+
+            </div>
+        </div>
+
+
+    </form>
+
+    @section Scripts{
+        <script>
+            $(document).ready(function () {
+                $('.custom-file-input').on("change", function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    $(this).next('.custom-file-label').html(fileName);
+                });
+            });
+        </script>
+    }
+   
+    </body>
+
+</html>
