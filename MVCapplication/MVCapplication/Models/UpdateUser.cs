@@ -7,6 +7,7 @@ using MVCapplication.Data.Migrations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -78,11 +79,16 @@ namespace MVCapplication.Models
 
         public string Update(string previousname, string name, string email, string password, string phno)
         {
-            Console.WriteLine("Model class");
-            //string query1 = "select FullName,Email,phno where UserName=@previousname";
+            Console.WriteLine("Model class UserName:"+previousname);
+            //List<String> values = Data(previousname);
             string query = "Update AspNetUsers SET NormalizedEmail=@nemail, NormalizedUserName=@nemail, FullName=@name, Email=@email ," +
-                     " UserName=@email,Phonenumber=@phno,PasswordHash=@password" +
-                     " where UserName=@previousname";
+                     " UserName=@email,Phonenumber=@phno";
+            if (password == "") query=query+"";
+            else   query = query + ",PasswordHash=@password";
+            query=query+" where UserName=@previousname;";
+            Console.WriteLine(query);
+            if (email == "") email = previousname;
+   
             using (SqlConnection con = new SqlConnection("data source=DESKTOP-JUH932N\\SQLEXPRESS;Database=user;integrated security=SSPI"))
             {
              
@@ -93,41 +99,31 @@ namespace MVCapplication.Models
                     con.Open();
                     var nemail = email.ToUpper();
                     //Task<IdentityUser> user = _userManager.GetUserAsync(User);
-                    var pswd = HashPassword(password);
+                    if (password != null && password!="")
+                    {
+                        var pswd = HashPassword(password);
+                        cmd.Parameters.AddWithValue("@password", pswd);
+                    }
                     // change= _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
                     //Console.WriteLine(User);
-                    cmd.Parameters.AddWithValue("@name", name);
+                   // command.Parameters.Add("@Pinz", SqlDbType.Int).Value = Pinz;
+                    cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value =name;
                     cmd.Parameters.AddWithValue("@email", email);
                     cmd.Parameters.AddWithValue("@nemail", nemail);
                     cmd.Parameters.AddWithValue("@phno", phno);
-                    cmd.Parameters.AddWithValue("@password", pswd);
-                    cmd.Parameters.AddWithValue("@previousname", previousname);
+                    cmd.Parameters.Add("@previousname", SqlDbType.NVarChar).Value = previousname;
+                   // cmd.Parameters.AddWithValue("@previousname", previousname);
                     string status = (cmd.ExecuteNonQuery()).ToString();
                     //string status = (cmd.ExecuteNonQuery() >= 1) ? "Record is saved Successfully!" : "Record is not saved";
                     //     Console.WriteLine(cmd.ExecuteNonQuery());
+                    con.Close();
                     return status;
                 }
             }
         }
        
       
-        public async Task<IActionResult> OnUpdateAsync()
-        {
-           
-            var user = await _userManager.GetUserAsync(User);
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
-            if (!changePasswordResult.Succeeded)
-            {
-                Console.WriteLine("Not changed password");
-            }
-            else
-            {
-                Console.WriteLine("Password Changed");
-            }
-            await _signInManager.RefreshSignInAsync(user);
-
-            return Page();
-        }
+       
     }
 }
 //cmd.Parameters.AddWithValue("@name", name);
@@ -135,3 +131,23 @@ namespace MVCapplication.Models
 //cmd.Parameters.AddWithValue("@password", password);
 //cmd.Parameters.AddWithValue("@phno", phno);
 //cmd.Parameters.AddWithValue("@previousname", previousname);
+
+
+
+//public async Task<IActionResult> OnUpdateAsync()
+//{
+
+//    var user = await _userManager.GetUserAsync(User);
+//    var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
+//    if (!changePasswordResult.Succeeded)
+//    {
+//        Console.WriteLine("Not changed password");
+//    }
+//    else
+//    {
+//        Console.WriteLine("Password Changed");
+//    }
+//    await _signInManager.RefreshSignInAsync(user);
+
+//    return Page();
+//}
