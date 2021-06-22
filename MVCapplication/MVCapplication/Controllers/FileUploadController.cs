@@ -55,10 +55,8 @@ namespace MVCapplication.Controllers
         //    Console.WriteLine(Username);
         //    Username = userName;
         //}
-        [HttpPost]
-        public ActionResult<string> UploadFilesAsync()
+        public ActionResult<string> UploadFileAdo()
         {
-            var t = (_signinManager.IsSignedIn(User));
             try
             {
                 var files = HttpContext.Request.Form.Files;
@@ -69,13 +67,14 @@ namespace MVCapplication.Controllers
                         FileInfo fi = new FileInfo(file.FileName);
                         //var filename = file.FileName;
                         //guid
-                       var  uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                         var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
                             file.CopyTo(stream);
                         }
+                        var time = DateTime.Today;
                         if (_signinManager.IsSignedIn(User))
                         {
 
@@ -83,31 +82,26 @@ namespace MVCapplication.Controllers
 
                         }
 
+                        var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
 
-                        var fileupload = new FileUpload();
-                        fileupload.FilePath = path;
-                        fileupload.IsProcessed = "false";
-                         fileupload.UserName = Username;
-                      
+                        var query = "INSERT INTO dbo.FileUploads(" + " UserName, FileName, FilePath, InsertedOn,IsProcessed " + ") VALUES(" + " @user, @file, @filpath,@insert,@process);";
+                        using (var conn = new SqlConnection(connstr))
+                        using (var cmd = new SqlCommand(query, conn))
+                        {
+                            conn.Open();
+                            cmd.Parameters.AddWithValue("@user", Username);
+                            cmd.Parameters.AddWithValue("@file", uniqueFileName);
+                            cmd.Parameters.AddWithValue("@filpath", path);
+                            cmd.Parameters.AddWithValue("@insert", time);
+                            cmd.Parameters.AddWithValue("@process", "false");
 
 
-                      
-                      //  ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-
-                        //for debugging
-                        // fileupload.UserName = "prakashgvs789";
-
-
-                        //should update foreign keyy
-
-                        fileupload.InsertedOn = DateTime.Today;
-                        fileupload.FileName = uniqueFileName;
-                        _dbcontext.FileUploads.Add(fileupload);
-                        _dbcontext.SaveChanges();
+                            cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }
 
                     }
-                    return "Saved succesfully"+t+"Saved successfully";
-
+                    return "Saved succesfully";
                 }
                 else
                 {
@@ -121,8 +115,76 @@ namespace MVCapplication.Controllers
             }
 
 
-            
+
         }
+        //[HttpPost]
+        //public ActionResult<string> UploadFiles()
+        //{
+        //    var t = (_signinManager.IsSignedIn(User));
+        //    try
+        //    {
+        //        var files = HttpContext.Request.Form.Files;
+        //        if (files != null && files.Count > 0)
+        //        {
+        //            foreach (var file in files)
+        //            {
+        //                FileInfo fi = new FileInfo(file.FileName);
+        //                //var filename = file.FileName;
+        //                //guid
+        //               var  uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+        //                var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
+
+        //                using (var stream = new FileStream(path, FileMode.Create))
+        //                {
+        //                    file.CopyTo(stream);
+        //                }
+        //                if (_signinManager.IsSignedIn(User))
+        //                {
+
+        //                    Username = User.Identity.Name;
+
+        //                }
+
+
+        //                var fileupload = new FileUpload();
+        //                fileupload.FilePath = path;
+        //                fileupload.IsProcessed = "false";
+        //                 fileupload.UserName = Username;
+                      
+
+
+                      
+        //              //  ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+        //                //for debugging
+        //                // fileupload.UserName = "prakashgvs789";
+
+
+        //                //should update foreign keyy
+
+        //                fileupload.InsertedOn = DateTime.Today;
+        //                fileupload.FileName = uniqueFileName;
+        //                _dbcontext.FileUploads.Add(fileupload);
+        //                _dbcontext.SaveChanges();
+
+        //            }
+        //            return "Saved succesfully"+t+"Saved successfully";
+
+        //        }
+        //        else
+        //        {
+        //            return "Select Files";
+        //        }
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return e.Message;
+        //    }
+
+
+            
+        //}
 
         [HttpGet]
         public ActionResult<List<FileUpload>> GetFileUpload()
@@ -213,7 +275,7 @@ namespace MVCapplication.Controllers
             var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
             var filename = "";
             var filepath = "";
-            var connstr = "Server=PRAKASH; Database=user; Trusted_Connection=true;";
+            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
             var query = "select FilePath from FileUploads  where F_ID=@id;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))

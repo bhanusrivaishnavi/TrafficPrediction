@@ -65,7 +65,7 @@ namespace MVCapplication.Areas.Identity.Pages.Account
             if (!ModelState.IsValid)
             {
                 return Page();
-            }
+            } 
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)

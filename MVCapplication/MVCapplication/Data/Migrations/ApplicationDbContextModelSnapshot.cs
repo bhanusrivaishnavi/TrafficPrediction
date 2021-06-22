@@ -19,6 +19,33 @@ namespace MVCapplication.Data.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("MVCapplication.Models.FileUpload", b =>
+                {
+                    b.Property<long>("F_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<DateTime>("InsertedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("IsProcessed")
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("varchar(max)");
+
+                    b.HasKey("F_ID");
+
+                    b.ToTable("FileUploads");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
