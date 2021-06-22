@@ -1,5 +1,4 @@
-﻿
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
@@ -19,7 +18,7 @@
 <body>
     <br /><br />
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-0">
             <form id="frmDetail" method="post" action="UpdateRecord">
                 <div class="form-group">
                     <input type="hidden" name="txtuser" asp-for="@User.Identity.Name" class="form-control" readonly />
@@ -27,17 +26,17 @@
                 </div>
                 <div class="form-group">
                     <label>First Name</label>
-                    <input name="txtFName" asp-for="Input.FullName" class="form-control" />
+                    <input name="txtFName"  asp-for="Input.FullName" class="form-control" required/>
                     <span asp-validation-for="Input.FullName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label>Last Name</label>
-                    <input name="txtLName" asp-for="Input.FullName" class="form-control" />
+                    <input name="txtLName" asp-for="Input.FullName" class="form-control" required/>
                     <span asp-validation-for="Input.FullName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.Email"></label>
-                    <input name="txtEmail" asp-for="Input.Email" class="form-control" />
+                    <input name="txtEmail" value="@User.Identity.Name" asp-for="Input.Email" class="form-control" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
               
@@ -48,7 +47,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.PhoneNumber"></label>
-                    <input name="txtPhno" asp-for="Input.PhoneNumber" class="form-control" />
+                    <input name="txtPhno" asp-for="Input.PhoneNumber" class="form-control" required/>
                     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                 </div>
                 <input type="submit" class="btn btn-info" value="Update" name="action" />
@@ -56,6 +55,18 @@
 
             </form>
         </div>
+   
+    
+        <div class="col-md-4 mt-0">
+            <form>
+                <p><b>Personal Info</b></p>
+                Printing info<br />
+                Username<br />
+                Name<br />
+                Password<br />
+            </form>
+        </div>
+            
     </div>
 </body>
 

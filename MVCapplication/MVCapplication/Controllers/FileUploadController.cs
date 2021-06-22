@@ -150,10 +150,10 @@ namespace MVCapplication.Controllers
         //                fileupload.FilePath = path;
         //                fileupload.IsProcessed = "false";
         //                 fileupload.UserName = Username;
-                      
 
 
-                      
+
+
         //              //  ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
         //                //for debugging
@@ -183,9 +183,48 @@ namespace MVCapplication.Controllers
         //    }
 
 
-            
-        //}
 
+        //}
+        [HttpGet]
+        public ActionResult<List<string>> HomeView()
+        {
+            var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+
+            List<string> result1 = new List<string>();
+            if (_signinManager.IsSignedIn(User))
+            {
+
+                Username = User.Identity.Name;
+
+            }
+            Console.WriteLine("Tha " + Username);
+
+            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
+            var query = "select * from FileUploads where UserName=@Username;";
+            using (var conn = new SqlConnection(connstr))
+            using (var cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.Add(
+                   "@Username",
+                   SqlDbType.NVarChar).SqlValue = Username;
+
+                conn.Open();
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var guid_file = Convert.ToString(reader["FileName"]);
+                    var file_name = guid_file.Substring(37);
+                    result1.Add(file_name);
+                }
+
+                conn.Close();
+
+
+            }
+            Console.WriteLine(result1);
+            return result1;
+        }
         [HttpGet]
         public ActionResult<List<FileUpload>> GetFileUpload()
         {

@@ -44,7 +44,7 @@ namespace MVCapplication.Areas.Identity.Pages.Account
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        public class InputModel
+        public class InputModel 
         {
             [Required]
             [Display(Name = "Name")]
@@ -64,6 +64,8 @@ namespace MVCapplication.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)

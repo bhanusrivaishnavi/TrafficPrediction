@@ -14,10 +14,13 @@ namespace MVCapplication.Data
             : base(options)
         {
         }
+        public ApplicationDbContext()
+        { }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<FileUpload> FileUploads { get; set; }
         //protected ApplicationDbContext ApplicationDbContext { get; set; }
-
+       
         protected UserManager<ApplicationUser> UserManager { get; set; }
+       
     }
 }

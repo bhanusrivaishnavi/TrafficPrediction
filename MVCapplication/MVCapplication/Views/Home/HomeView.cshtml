@@ -2,18 +2,47 @@
 @{
     ViewData["Title"] = "Home";
 }
+@model FileUpload
 <html>
 
 <body>
-    <div class="container">
-        <div class="jumbotron h-25 w-100 p-3 mt-3 text-light" style="background-color:dimgrey">
-            Welcome! @User.Identity.Name
+    <style>
+        li a:hover {
+            background-color: #555;
+            color: black;
+        }
+
+        p {
+            background-color: black;
+            color: white;
+        }
+    </style>
+    <br />
+    <div class="jumbotron h-25 w-100 p-3 mt-3 text-light" style="background-color:dimgrey">
+        Welcome! @User.Identity.Name
+    </div>
+
+   
+
+    <div class="row">
+        <div class="col-md-3">
+            <p>List of processed files</p>
+            <ul class="navbar nav nav-fill" style="background-color:white;">
+
+                @foreach (var value in (List<String>)ViewBag.answer)
+                {
+                    <li class="nav-item nav-tabs border" style="border-block-color:white;">
+                        <a class="nav-link" href="/">@value</a>
+                       </li>
+                 }
+                </ul>
+    </div>
+        <div class="col-md-9">
+            <p>Document Metadata</p>
         </div>
     </div>
-    
-       
-    
-    
+
+
 </body>
 
 </html>
