@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using MVCapplication.Data.Migrations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
+using Newtonsoft.Json;
 
 namespace MVCapplication.Controllers
 {
@@ -38,7 +38,8 @@ namespace MVCapplication.Controllers
 
         public string Username;
 
-       
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public FileUploadController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbcontext, /*UserManager<IdentityUser> userManager,*/ SignInManager<IdentityUser> signinManager)
         {
@@ -71,7 +72,7 @@ namespace MVCapplication.Controllers
                         var ext = Path.GetExtension(uniqueFileName);
                         if (ext != ".csv")
                         {
-                            return "Only csv Files are Accepted";
+                            StatusMessage="Only csv Files are Accepted";
                         }
                         var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
 
@@ -108,21 +109,71 @@ namespace MVCapplication.Controllers
                         }
 
                     }
-                    return "Saved succesfully";
+                    StatusMessage = "File Uploaded Successfully.";
+
                 }
                 else
                 {
-                    return "Select Files";
+                    StatusMessage="Select Files.";
                 }
 
             }
             catch (Exception e)
             {
-                return e.Message;
+                StatusMessage= e.Message;
+            }
+
+            return StatusMessage;
+
+        }
+
+
+        //posting meta data 
+        [HttpGet]
+        public ActionResult<string> GetFileMetaData(int? id, string? fname)
+        {
+            //"6a3a11c5-3a5c-43a9-aba5-8ef1cc1c3a5c_TrafficVolume_Train.csv"
+
+            //url=https://localhost:44300/api/FileUpload/GetFileMetaData?id=1&fname=%226a3a11c5-3a5c-43a9-aba5-8ef1cc1c3a5c_TrafficVolume_Train.csv%22
+
+
+
+            List<string> result1 = new List<string>();
+            if (_signinManager.IsSignedIn(User))
+            {
+
+                Username = User.Identity.Name;
+
             }
 
 
+            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
+            var query = "select * from FileUploads where FileName=@fname;";
+            using (var conn = new SqlConnection(connstr))
+            using (var cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.Add(
+                   "@fname",
+                   SqlDbType.NVarChar).SqlValue = fname;
 
+                conn.Open();
+                var reader = cmd.ExecuteReader();
+
+                var dataTable = new DataTable();
+                dataTable.Load(reader);
+                string JSONString = string.Empty;
+                JSONString = JsonConvert.SerializeObject(dataTable);
+
+
+
+
+                conn.Close();
+                // return filename;
+                return (JSONString + fname);
+
+            }
+
+            //url=https://localhost:44300/api/FileUpload/GetFileMetaData?btnGetFiles=
         }
         //[HttpPost]
         //public ActionResult<string> UploadFiles()

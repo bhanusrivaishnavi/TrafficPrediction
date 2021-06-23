@@ -16,6 +16,7 @@
 </head>
 
 <body>
+
     <br /><br />
     <div class="row">
         <div class="col-md-8">
@@ -37,23 +38,24 @@
 
                 <div class="form-group">
                     <label asp-for="Input.NewPassword"></label>
-                    <input name="txtpswd1" asp-for="Input.NewPassword" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"  />
+                    <input name="txtpswd1" asp-for="Input.NewPassword" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
                     <span asp-validation-for="Input.NewPassword" class="text-danger"></span>
                 </div>
-               
+
                 <div class="form-group">
                     <label asp-for="Input.PhoneNumber"></label>
                     <input name="txtPhno" value="@ViewBag.answer[1]" asp-for="Input.PhoneNumber" class="form-control" required />
                     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                 </div>
                 <input type="submit" class="btn btn-info" value="Update" name="action" />
-
+              
 
             </form>
         </div>
-   
-               
+
+
     </div>
+   
 </body>
 
 </html>

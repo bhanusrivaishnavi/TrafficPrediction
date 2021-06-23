@@ -53,6 +53,7 @@ namespace MVCapplication.Models
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            public string StatusMessage { get; set; }
 
         }
         public static string HashPassword(string password)
@@ -114,9 +115,11 @@ namespace MVCapplication.Models
                     //string status = (cmd.ExecuteNonQuery() >= 1) ? "Record is saved Successfully!" : "Record is not saved";
                     //     Console.WriteLine(cmd.ExecuteNonQuery());
                     con.Close();
+                    
                     return status;
                 }
             }
+            
         }
        
       

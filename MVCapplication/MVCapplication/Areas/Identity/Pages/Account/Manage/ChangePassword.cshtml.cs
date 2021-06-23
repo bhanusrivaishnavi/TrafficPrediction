@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 namespace MVCapplication.Areas.Identity.Pages.Account.Manage
-{
+{ 
     public class ChangePasswordModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager; 
