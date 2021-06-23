@@ -68,7 +68,14 @@ namespace MVCapplication.Controllers
                         //var filename = file.FileName;
                         //guid
                         var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                        var ext = Path.GetExtension(uniqueFileName);
+                        if (ext != ".csv")
+                        {
+                            return "Only csv Files are Accepted";
+                        }
                         var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
+
+                       // var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
@@ -214,8 +221,8 @@ namespace MVCapplication.Controllers
                 while (reader.Read())
                 {
                     var guid_file = Convert.ToString(reader["FileName"]);
-                    var file_name = guid_file.Substring(37);
-                    result1.Add(file_name);
+                    //var file_name = guid_file.Substring(37);
+                    result1.Add(guid_file);
                 }
 
                 conn.Close();

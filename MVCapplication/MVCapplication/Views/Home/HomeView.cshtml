@@ -7,11 +7,9 @@
 
 <body>
     <style>
-        li a:hover {
-            background-color: #555;
-            color: black;
+        .nav > li > a:hover {
+            background-color: dodgerblue;
         }
-
         p {
             background-color: black;
             color: white;
@@ -32,7 +30,7 @@
                 @foreach (var value in (List<String>)ViewBag.answer)
                 {
                     <li class="nav-item nav-tabs border" style="border-block-color:white;">
-                        <a class="nav-link" href="/">@value</a>
+                        <a class="nav-link" href="/">@value.Substring(37,value.Length-37-4)</a>
                        </li>
                  }
                 </ul>

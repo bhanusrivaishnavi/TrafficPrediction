@@ -34,8 +34,46 @@ namespace MVCapplication.Controllers
             return View();
         }
 
-        public IActionResult UpdateUser()
+        public ActionResult<List<String>> UpdateUser()
         {
+            var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+
+            List<string> result1 = new List<string>();
+            if (_signinManager.IsSignedIn(User))
+            {
+
+                Username = User.Identity.Name;
+
+            }
+            Console.WriteLine("Tha " + Username);
+
+            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
+            var query = "select FullName,PhoneNumber from AspNetUsers where UserName=@Username;";
+            using (var conn = new SqlConnection(connstr))
+            using (var cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.Add(
+                   "@Username",
+                   SqlDbType.NVarChar).SqlValue = Username;
+
+                conn.Open();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    result1.Add(reader["FullName"].ToString());
+                    result1.Add(reader["PhoneNumber"].ToString());
+                   
+                }
+
+                reader.Close();
+
+                conn.Close();
+
+
+            }
+            //Console.WriteLine()
+            ViewBag.answer = result1;
+            Console.WriteLine(result1[1]+ ViewBag.answer[0]);
             return View();
         }
 
@@ -76,8 +114,8 @@ namespace MVCapplication.Controllers
                 while (reader.Read())
                 {
                     var guid_file = Convert.ToString(reader["FileName"]);
-                    var file_name = guid_file.Substring(37);
-                    result1.Add(file_name);
+                    //var file_name = guid_file.Substring(37);
+                    result1.Add(guid_file);
                 }
 
                 conn.Close();
