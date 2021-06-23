@@ -22,11 +22,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace MVCapplication.Controllers
 {
-   // [Authorize]
-    
+    // [Authorize]
+
     [Route("api/[controller]/[action]")]
     [ApiController]
-    
+
     public class FileUploadController : Controller
     {
         ApplicationUser au = new ApplicationUser();
@@ -72,10 +72,14 @@ namespace MVCapplication.Controllers
                         //guid
                         var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                         var ext = Path.GetExtension(uniqueFileName);
+                        Console.WriteLine(ext);
                         if (ext != ".csv")
                         {
                             StatusMessage = "Only csv Files are Accepted";
+                            ViewBag.status = StatusMessage;
+                            return View("UploadFileAdo");
                         }
+
                         var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
 
                         // var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
@@ -144,16 +148,17 @@ namespace MVCapplication.Controllers
             {
                 StatusMessage = e.Message;
             }
-
-            return StatusMessage;
+            ViewBag.status = StatusMessage;
+            //return StatusMessage;
+           return View("UploadFileAdo");
 
         }
-        
+
 
 
         //posting meta data 
         [HttpGet]
-        public ActionResult <List<string>> GetFileMetaData(string fname)
+        public ActionResult<List<string>> GetFileMetaData(string fname)
         {
             //"6a3a11c5-3a5c-43a9-aba5-8ef1cc1c3a5c_TrafficVolume_Train.csv"
 
@@ -250,7 +255,7 @@ namespace MVCapplication.Controllers
             Console.WriteLine(result1);
             return result1;
         }
-        
+
         [HttpGet]
         public ActionResult<FileUpload> Download3(int? id, string fname)
         {
@@ -273,7 +278,7 @@ namespace MVCapplication.Controllers
                 {
                     filepath = reader.GetString(0);
                 }
-               
+
                 filename = Path.GetFileName(filepath);
                 var filebytes = System.IO.File.ReadAllBytes(filepath);
 
@@ -295,7 +300,7 @@ namespace MVCapplication.Controllers
             }
 
         }
-       
+
 
     }
 }
