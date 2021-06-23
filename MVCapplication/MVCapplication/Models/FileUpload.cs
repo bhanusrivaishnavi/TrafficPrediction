@@ -36,6 +36,8 @@ namespace MVCapplication.Models
 
         public string StatusMessage { get; set; }
 
+        [Column(TypeName = "varchar(max)")]
+        public string FullName { get; set; }
 
     }
 }

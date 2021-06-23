@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Home";
+}
+@model FileUpload
+<html>
+
+<body>
+    <style>
+        .nav > li > a:hover {
+            background-color: dodgerblue;
+        }
+
+        p {
+            background-color: black;
+            color: white;
+        }
+    </style>
+    <br />
+    <div class="jumbotron h-25 w-100 p-3 mt-3 text-light" style="background-color:dimgrey">
+        Welcome! @User.Identity.Name
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <p>List of processed files</p>
+            <ul class="navbar nav nav-fill" style="background-color:white;">
+                @if (ViewBag.answer != null)
+                {
+                    @foreach (var value in (List<String>)ViewBag.answer)
+                    {
+                        <li class="nav-item nav-tabs border" style="border-block-color:white;">
+                            <a class="buttoncli" href="https://localhost:44300/api/FileUpload/Download3?id=1&fname=@value">Download</a>
+                            <a class="nav-link" href="https://localhost:44300/api/FileUpload/GetFileMetaData?id=1&fname=@value">@value.Substring(37, value.Length - 37 - 4)</a>
+                        </li>
+                    }
+                }
+                </ul>
+        </div>
+        <div class="col-md-9">
+
+            <p>Document Metadata</p>
+            @if (ViewBag.answer1 != null)
+            {
+                @foreach (var value in (List<String>)ViewBag.answer1)
+                {
+                    <ul>
+                        <li>@value[2]</li>
+                        <li>@value[3]</li>
+                    </ul>
+                }
+            }
+        </div>
+    </div>
+
+
+</body>
+
+</html>

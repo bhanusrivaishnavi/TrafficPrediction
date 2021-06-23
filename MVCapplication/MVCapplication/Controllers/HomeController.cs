@@ -71,6 +71,7 @@ namespace MVCapplication.Controllers
 
 
             }
+            result1.Add("Record Updated Successfully");
             //Console.WriteLine()
             ViewBag.answer = result1;
             Console.WriteLine(result1[1]+ ViewBag.answer[0]);
@@ -151,6 +152,7 @@ namespace MVCapplication.Controllers
             }
             return View();
         }
+
 
 
     }
