@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MVCapplication.Data;
 using MVCapplication.Models;
@@ -22,11 +23,13 @@ namespace MVCapplication.Controllers
         public ApplicationDbContext _dbcontext;
         private readonly SignInManager<IdentityUser> _signinManager;
         public string Username;
-        public HomeController(ILogger<HomeController> logger,ApplicationDbContext db, SignInManager<IdentityUser> signinManager)
+        private readonly IConfiguration _config;
+        public HomeController(IConfiguration config,ILogger<HomeController> logger,ApplicationDbContext db, SignInManager<IdentityUser> signinManager)
         {
             _dbcontext = db;
             _logger = logger;
             _signinManager = signinManager;
+            _config = config;
         }
 
         public IActionResult Index()
@@ -46,8 +49,7 @@ namespace MVCapplication.Controllers
 
             }
             Console.WriteLine("Tha " + Username);
-
-            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
             var query = "select FullName,PhoneNumber from AspNetUsers where UserName=@Username;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
@@ -100,7 +102,7 @@ namespace MVCapplication.Controllers
             }
             Console.WriteLine("Tha " + Username);
 
-            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
             var query = "select * from FileUploads where UserName=@Username;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))

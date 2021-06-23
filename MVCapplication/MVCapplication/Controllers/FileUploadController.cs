@@ -18,6 +18,7 @@ using MVCapplication.Data.Migrations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace MVCapplication.Controllers
 {
@@ -34,21 +35,29 @@ namespace MVCapplication.Controllers
         public ApplicationDbContext _dbcontext;
         //private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signinManager;
-
+        private readonly IConfiguration _config;
 
         public string Username;
 
         [TempData]
         public string StatusMessage { get; set; }
-
-        public FileUploadController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbcontext, /*UserManager<IdentityUser> userManager,*/ SignInManager<IdentityUser> signinManager)
+        public FileUploadController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbcontext, /*UserManager<IdentityUser> userManager,*/ SignInManager<IdentityUser> signinManager, IConfiguration config)
         {
             _hostingEnvironment = hostingEnvironment;
             _dbcontext = dbcontext;
             _signinManager = signinManager;
-          //  _userManager = userManager;
+            //  _userManager = userManager;
+            _config = config;
 
         }
+        //public FileUploadController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbcontext, /*UserManager<IdentityUser> userManager,*/ SignInManager<IdentityUser> signinManager)
+        //{
+        //    _hostingEnvironment = hostingEnvironment;
+        //    _dbcontext = dbcontext;
+        //    _signinManager = signinManager;
+        //  //  _userManager = userManager;
+
+        //}
         public ActionResult<string> UploadFileAdo()
         {
             try
@@ -85,7 +94,7 @@ namespace MVCapplication.Controllers
                         var query1 = "Select FullName from dbo.AspNetUsers where UserName=@Username;";
 
 
-                        var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";// "Server=PRAKASH; Database=user; Trusted_Connection=true;";
+                        var connstr = _config.GetConnectionString("UserIdentityDBConnection");//"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";// "Server=PRAKASH; Database=user; Trusted_Connection=true;";
 
 
                         var fullname = "hi";
@@ -161,7 +170,7 @@ namespace MVCapplication.Controllers
             }
 
 
-            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
             var query = "select * from FileUploads where FileName=@fname;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
@@ -205,7 +214,7 @@ namespace MVCapplication.Controllers
             }
             Console.WriteLine("Tha " + Username);
 
-            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
             var query = "select * from FileUploads where UserName=@Username;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
@@ -248,7 +257,7 @@ namespace MVCapplication.Controllers
             var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
             var filename = "";
             var filepath = "";
-            var connstr = "Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
             var query = "select FilePath from FileUploads  where FileName=@fname;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
