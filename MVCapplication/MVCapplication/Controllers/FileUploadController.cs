@@ -201,6 +201,10 @@ namespace MVCapplication.Controllers
                 // Console.WriteLine(JSONString[0]);
                 ViewBag.answer = GetData();
                 ViewBag.answer1 = result2;
+                List<String> first = GetProcessedDataID(fname);
+               ViewBag.answer2 = first;
+               ViewBag.answer3 = GetProcessedDataVolume(fname);
+                ViewBag.answer4 = first.Count();
                 conn.Close();
                 // return filename;
                 return View("GetFileMetaData");
@@ -208,6 +212,122 @@ namespace MVCapplication.Controllers
             }
 
             //url=https://localhost:44300/api/FileUpload/GetFileMetaData?btnGetFiles=
+        }
+        public List<string> GetProcessedDataID(string fname)
+        {
+            //this is sending accidentally to Final folder
+            var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + fname);
+            string pathOnly = Path.GetDirectoryName(path);
+            string fileName = Path.GetFileName(path);
+
+            using (var reader = new StreamReader(path))
+            {
+
+                List<string> listA = new List<string>();
+              List<string> listB = new List<string>();
+                int c = 0;
+                while (!reader.EndOfStream)
+                {
+                    if (c == 10) break;
+                    c = c + 1;
+                    var line = reader.ReadLine();
+
+                    var values = line.Split(',');
+
+                    listA.Add(values[0]);
+
+
+                }
+
+                return listA;
+            }
+        }
+        public List<string> GetProcessedDataVolume(string fname)
+        {
+            //this is sending accidentally to Final folder
+            var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + fname);
+            string pathOnly = Path.GetDirectoryName(path);
+            string fileName = Path.GetFileName(path);
+
+
+
+            /* string csvData = System.IO.File.ReadAllText(path);
+             int count = 0;
+             foreach (string row in csvData.Split('\n'))
+             {
+                 if (!string.IsNullOrEmpty(row))
+                 {
+                     count += 1;
+                 }
+             }*/
+            // return count.ToString();
+            /*StringBuilder sb = new StringBuilder();
+            using (StreamReader sr = new StreamReader(path, Encoding.Default, true))
+            {
+                String line;
+                // Read and display lines from the file until the end of 
+                // the file is reached.
+                while ((line = sr.ReadLine()) != null)
+                {
+                    sb.AppendLine(line);
+                }
+            }
+            string allines = sb.ToString();
+
+
+            UTF8Encoding utf8 = new UTF8Encoding();
+
+
+            var preamble = utf8.GetPreamble();
+
+            var data = utf8.GetBytes(allines);
+
+            string hexString = BitConverter.ToString(data).Replace("-", string.Empty).ToLower();
+            
+            return hexString+"helll";
+*/
+            /* var records = new List<string>();
+
+             string test = "hello";
+             int count = 0;
+             using (var stream = new FileStream(path, FileMode.Create))
+             using (var sreader = new StreamReader(stream))
+                 while (!sreader.EndOfStream)
+                 {
+                     count += 1;
+                     string[] rows = sreader.ReadLine().Split(',');
+                     records.Add(rows[1]);
+                     test = count.ToString();
+
+                 }*/
+
+            // return count.ToString()+path+csvData;
+
+
+            using (var reader = new StreamReader(path))
+            {
+
+             
+                List<string> listB = new List<string>();
+                int c = 0;
+                while (!reader.EndOfStream)
+                {
+                    if (c == 10) break;
+                    c = c + 1;
+                    var line = reader.ReadLine();
+
+                    var values = line.Split(',');
+
+
+                    listB.Add(values[1]);
+
+                }
+             //   listA.AddRange(listB);
+                return listB;
+            }
+
+
+
         }
         public List<string> GetData()
         {

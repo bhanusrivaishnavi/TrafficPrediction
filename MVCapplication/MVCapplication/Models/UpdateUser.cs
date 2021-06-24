@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using MVCapplication.Data.Migrations;
 using System;
 using System.Collections.Generic;
@@ -19,15 +20,16 @@ namespace MVCapplication.Models
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-
+        private readonly IConfiguration _config;
         public UpdateUser()
         {
             
         }
-        public UpdateUser(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public UpdateUser(IConfiguration config,UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _config = config;
         }
         public string Username { get { return "Vaishnavi"; }  set { } }
         [BindProperty]
@@ -86,37 +88,37 @@ namespace MVCapplication.Models
             query=query+" where UserName=@previousname;";
             Console.WriteLine(query);
             if (email == "") email = previousname;
-   
-            using (SqlConnection con = new SqlConnection("data source=DESKTOP-JUH932N\\SQLEXPRESS;Database=user;integrated security=SSPI"))
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection");
+
+            using (var conn = new SqlConnection(connstr))
             {
-             
-                using (SqlCommand cmd = new SqlCommand(query))
+                using (var cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Connection = con;
-                  
-                    con.Open();
+                    conn.Open();
+
                     var nemail = email.ToUpper();
                     //Task<IdentityUser> user = _userManager.GetUserAsync(User);
-                    if (password != null && password!="")
+                    if (password != null && password != "")
                     {
                         var pswd = HashPassword(password);
                         cmd.Parameters.AddWithValue("@password", pswd);
                     }
                     // change= _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
                     //Console.WriteLine(User);
-                   // command.Parameters.Add("@Pinz", SqlDbType.Int).Value = Pinz;
-                    cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value =name;
+                    // command.Parameters.Add("@Pinz", SqlDbType.Int).Value = Pinz;
+                    cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value = name;
                     cmd.Parameters.AddWithValue("@email", email);
                     cmd.Parameters.AddWithValue("@nemail", nemail);
                     cmd.Parameters.AddWithValue("@phno", phno);
                     cmd.Parameters.Add("@previousname", SqlDbType.NVarChar).Value = previousname;
-                   // cmd.Parameters.AddWithValue("@previousname", previousname);
+                    // cmd.Parameters.AddWithValue("@previousname", previousname);
                     string status = (cmd.ExecuteNonQuery()).ToString();
                     //string status = (cmd.ExecuteNonQuery() >= 1) ? "Record is saved Successfully!" : "Record is not saved";
                     //     Console.WriteLine(cmd.ExecuteNonQuery());
-                    con.Close();
-                    
+                    conn.Close();
+
                     return status;
+
                 }
             }
             

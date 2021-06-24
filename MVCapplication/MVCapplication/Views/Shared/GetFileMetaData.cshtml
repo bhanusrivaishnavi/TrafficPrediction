@@ -10,7 +10,9 @@
         .nav > li > a:hover {
             background-color: dodgerblue;
         }
-
+        tr:nth-child(even) {
+            background-color: palegreen;
+        }
         p {
             background-color: black;
             color: white;
@@ -45,26 +47,57 @@
             <p>Document Metadata</p>
             @if (ViewBag.answer1 != null)
             {
-              
-        <ul style="list-style-type:none;">
 
-            <h4>
-                <span class="badge badge-secondary" style="display:inline-block;">Created By:</span>
-                @ViewBag.answer1[4]
-            </h4>
-            <h4>
-                <span class="badge badge-secondary" style="display:inline;">Created On:</span>
-                @ViewBag.answer1[3].Substring(0, 10)
-            </h4>
-            <h4>
-                <span class="badge badge-secondary" style="display:inline;">File Info&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
-                @ViewBag.answer1[1].Substring(37)
-            </h4>
-            <a class="buttoncli" href="https://localhost:44300/api/FileUpload/Download3?fname=@ViewBag.answer1[1]">Download</a>
 
-        </ul>
+
+                <h5>
+                    <span class="badge badge-secondary" style="display:inline-block;">Created By&nbsp;:</span>
+                    @ViewBag.answer1[4]
+                </h5>
+                <h5>
+                    <span class="badge badge-secondary" style="display:inline;">Created On:</span>
+                    @ViewBag.answer1[3].Substring(0, 10)
+                </h5>
+                <h5>
+                    <span class="badge badge-secondary" style="display:inline;">File Info&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+                    @ViewBag.answer1[1].Substring(37) <a class="buttoncli" href="https://localhost:44300/api/FileUpload/Download3?fname=@ViewBag.answer1[1]"><img src="~/css/Capture.PNG" alt="Download" width="30" height="30"></a>
+                 </h5>
                 
+                    
+              
+
+
+
+
+
             }
+            <br />
+            <p>Dataset</p>
+
+            <div>
+                @if (ViewBag.answer2 != null && ViewBag.answer3 != null)
+                {
+                    <table class="table table-striped table-bordered table-responsive-sm" border-color="lawngreen" style="border-color:yellowgreen; width:500px; height:50px;">
+                        <thead style="border-color:lawngreen;">
+                            <tr class="bg-success">
+                                <th style="column-width:200px;" scope="col">@ViewBag.answer2[0]</th>
+                                <th style="column-width:250px;" scope="col">@ViewBag.answer3[0]</th>
+                            </tr>
+                        </thead>
+                        <tbody style="border-color:lawngreen;">
+                            @for (int i = 1; i < ViewBag.answer4; i++)
+                            {
+                                <tr>
+                                    <td>@ViewBag.answer2[i]</td>
+                                    <td>@ViewBag.answer3[i]</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                }
+
+            </div>
         </div>
     </div>
 
