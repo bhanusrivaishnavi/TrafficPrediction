@@ -33,7 +33,6 @@ namespace MVCapplication.Controllers
         List<string> result1 = new List<string>();
         public IWebHostEnvironment _hostingEnvironment;
         public ApplicationDbContext _dbcontext;
-        //private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signinManager;
         private readonly IConfiguration _config;
 
@@ -46,18 +45,10 @@ namespace MVCapplication.Controllers
             _hostingEnvironment = hostingEnvironment;
             _dbcontext = dbcontext;
             _signinManager = signinManager;
-            //  _userManager = userManager;
             _config = config;
 
         }
-        //public FileUploadController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbcontext, /*UserManager<IdentityUser> userManager,*/ SignInManager<IdentityUser> signinManager)
-        //{
-        //    _hostingEnvironment = hostingEnvironment;
-        //    _dbcontext = dbcontext;
-        //    _signinManager = signinManager;
-        //  //  _userManager = userManager;
-
-        //}
+       
         public ActionResult<string> UploadFileAdo()
         {
             try
@@ -68,8 +59,6 @@ namespace MVCapplication.Controllers
                     foreach (var file in files)
                     {
                         FileInfo fi = new FileInfo(file.FileName);
-                        //var filename = file.FileName;
-                        //guid
                         var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                         var ext = Path.GetExtension(uniqueFileName);
                         Console.WriteLine(ext);
@@ -82,7 +71,7 @@ namespace MVCapplication.Controllers
 
                         var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
 
-                        // var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
+                       
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
@@ -108,9 +97,7 @@ namespace MVCapplication.Controllers
                             conn.Open();
 
 
-                            cmd.Parameters.Add(
-                   "@Username",
-                   SqlDbType.NVarChar).SqlValue = Username;
+                            cmd.Parameters.Add("@Username",SqlDbType.NVarChar).SqlValue = Username;
 
                             string name = cmd.ExecuteScalar().ToString();
                             fullname = name;
@@ -149,7 +136,7 @@ namespace MVCapplication.Controllers
                 StatusMessage = e.Message;
             }
             ViewBag.status = StatusMessage;
-            //return StatusMessage;
+            
            return View("UploadFileAdo");
 
         }
@@ -160,12 +147,6 @@ namespace MVCapplication.Controllers
         [HttpGet]
         public ActionResult<List<string>> GetFileMetaData(string fname)
         {
-            //"6a3a11c5-3a5c-43a9-aba5-8ef1cc1c3a5c_TrafficVolume_Train.csv"
-
-            //url=https://localhost:44300/api/FileUpload/GetFileMetaData?id=1&fname=%226a3a11c5-3a5c-43a9-aba5-8ef1cc1c3a5c_TrafficVolume_Train.csv%22
-
-
-
             List<string> result2 = new List<string>();
             if (_signinManager.IsSignedIn(User))
             {
@@ -185,11 +166,6 @@ namespace MVCapplication.Controllers
                 conn.Open();
                 var reader = cmd.ExecuteReader();
 
-                //var dataTable = new DataTable();
-                ////dataTable.Load(reader);
-                //string JSONString = string.Empty;
-                //JSONString = JsonConvert.SerializeObject(dataTable);
-                //result1 = JSONString.ToList();
                 while (reader.Read())
                 {
                     result2.Add(reader["FilePath"].ToString());
@@ -198,7 +174,7 @@ namespace MVCapplication.Controllers
                     result2.Add(reader["InsertedOn"].ToString());
                     result2.Add(reader["FullName"].ToString());
                 }
-                // Console.WriteLine(JSONString[0]);
+               
                 ViewBag.answer = GetData();
                 ViewBag.answer1 = result2;
                 List<String> first = GetProcessedDataID(fname);
@@ -211,8 +187,9 @@ namespace MVCapplication.Controllers
 
             }
 
-            //url=https://localhost:44300/api/FileUpload/GetFileMetaData?btnGetFiles=
+           
         }
+
         public List<string> GetProcessedDataID(string fname)
         {
             //this is sending accidentally to Final folder
@@ -248,62 +225,7 @@ namespace MVCapplication.Controllers
             var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + fname);
             string pathOnly = Path.GetDirectoryName(path);
             string fileName = Path.GetFileName(path);
-
-
-
-            /* string csvData = System.IO.File.ReadAllText(path);
-             int count = 0;
-             foreach (string row in csvData.Split('\n'))
-             {
-                 if (!string.IsNullOrEmpty(row))
-                 {
-                     count += 1;
-                 }
-             }*/
-            // return count.ToString();
-            /*StringBuilder sb = new StringBuilder();
-            using (StreamReader sr = new StreamReader(path, Encoding.Default, true))
-            {
-                String line;
-                // Read and display lines from the file until the end of 
-                // the file is reached.
-                while ((line = sr.ReadLine()) != null)
-                {
-                    sb.AppendLine(line);
-                }
-            }
-            string allines = sb.ToString();
-
-
-            UTF8Encoding utf8 = new UTF8Encoding();
-
-
-            var preamble = utf8.GetPreamble();
-
-            var data = utf8.GetBytes(allines);
-
-            string hexString = BitConverter.ToString(data).Replace("-", string.Empty).ToLower();
             
-            return hexString+"helll";
-*/
-            /* var records = new List<string>();
-
-             string test = "hello";
-             int count = 0;
-             using (var stream = new FileStream(path, FileMode.Create))
-             using (var sreader = new StreamReader(stream))
-                 while (!sreader.EndOfStream)
-                 {
-                     count += 1;
-                     string[] rows = sreader.ReadLine().Split(',');
-                     records.Add(rows[1]);
-                     test = count.ToString();
-
-                 }*/
-
-            // return count.ToString()+path+csvData;
-
-
             using (var reader = new StreamReader(path))
             {
 
@@ -322,7 +244,7 @@ namespace MVCapplication.Controllers
                     listB.Add(values[1]);
 
                 }
-             //   listA.AddRange(listB);
+           
                 return listB;
             }
 
@@ -337,7 +259,7 @@ namespace MVCapplication.Controllers
                 Username = User.Identity.Name;
 
             }
-            Console.WriteLine("Tha " + Username);
+            Console.WriteLine("The " + Username);
 
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
             var query = "select * from FileUploads where UserName=@Username;";
@@ -353,9 +275,8 @@ namespace MVCapplication.Controllers
 
                 while (reader.Read())
                 {
-                    var guid_file = Convert.ToString(reader["FileName"]);
-                    //var file_name = guid_file.Substring(37);
-                    result1.Add(guid_file);
+                                     
+                    result1.Add(Convert.ToString(reader["FileName"]));
                 }
                 reader.Close();
                 conn.Close();
@@ -716,3 +637,57 @@ namespace MVCapplication.Controllers
 //    return StatusMessage;
 
 //}
+
+
+
+/* string csvData = System.IO.File.ReadAllText(path);
+ int count = 0;
+ foreach (string row in csvData.Split('\n'))
+ {
+     if (!string.IsNullOrEmpty(row))
+     {
+         count += 1;
+     }
+ }*/
+// return count.ToString();
+/*StringBuilder sb = new StringBuilder();
+using (StreamReader sr = new StreamReader(path, Encoding.Default, true))
+{
+    String line;
+    // Read and display lines from the file until the end of 
+    // the file is reached.
+    while ((line = sr.ReadLine()) != null)
+    {
+        sb.AppendLine(line);
+    }
+}
+string allines = sb.ToString();
+
+
+UTF8Encoding utf8 = new UTF8Encoding();
+
+
+var preamble = utf8.GetPreamble();
+
+var data = utf8.GetBytes(allines);
+
+string hexString = BitConverter.ToString(data).Replace("-", string.Empty).ToLower();
+
+return hexString+"helll";
+*/
+/* var records = new List<string>();
+
+ string test = "hello";
+ int count = 0;
+ using (var stream = new FileStream(path, FileMode.Create))
+ using (var sreader = new StreamReader(stream))
+     while (!sreader.EndOfStream)
+     {
+         count += 1;
+         string[] rows = sreader.ReadLine().Split(',');
+         records.Add(rows[1]);
+         test = count.ToString();
+
+     }*/
+
+// return count.ToString()+path+csvData;
