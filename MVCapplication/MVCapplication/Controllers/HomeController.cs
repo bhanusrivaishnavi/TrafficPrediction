@@ -19,6 +19,7 @@ namespace MVCapplication.Controllers
 {
     public class HomeController : Controller
     {
+       
         private readonly ILogger<HomeController> _logger;
         public ApplicationDbContext _dbcontext;
         private readonly SignInManager<IdentityUser> _signinManager;
@@ -36,7 +37,7 @@ namespace MVCapplication.Controllers
         {
             return View();
         }
-
+       
         public ActionResult<List<String>> UpdateUser()
         {
             var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
@@ -83,6 +84,14 @@ namespace MVCapplication.Controllers
             return View();
         }
         public IActionResult UploadView()
+        {
+            return View();
+        }
+        public IActionResult UserView()
+        {
+            return View();
+        }
+        public IActionResult UpdatePassword()
         {
             return View();
         }
@@ -135,8 +144,10 @@ namespace MVCapplication.Controllers
         public IActionResult UpdateRecord(IFormCollection frm, string action)
         {
             Console.WriteLine("Controller class"+action);
+            
             if (action == "Update")
             {
+               
                 UpdateUser model = new UpdateUser();
                 string previousname = frm["txtuser"];
                 string name = frm["txtFName"] + " "+ frm["txtLName"];
@@ -144,12 +155,53 @@ namespace MVCapplication.Controllers
                 string password = frm["txtpswd1"];
                 string phno = frm["txtPhno"];
                 Console.WriteLine(frm["txtuser"]+"PreviousName:"+previousname+"\n"+name + "\n" + email + "\n" + password + "\n" + phno);
-                string status=Update(previousname, name, email, password, phno);
-               Console.WriteLine(status);
+                int t= Update(previousname, name, email, password, phno);
+                if (t == 1) ViewBag.status = "Record Updated Successfully!!";
+                else ViewBag.error = "Record Not Updated. Try Again!";
+                return View("UpdateUser");
             }
+            if(action=="Change")
+            {
+                Console.WriteLine(frm["newpswd"]);
+                Console.WriteLine(frm["newpswd1"]);
+                if (frm["newpswd"]!=frm["newpswd1"])
+                {
+                    ViewBag.error = "Passwords does not match";
+                    Console.WriteLine(ViewBag.error);
+                }
+                else
+                {
+                    string password = frm["newpswd"];
+                    int t= UpdatePswd(password);
+                    if (t == 1) ViewBag.status = "Password Updated Successfully";
+                    else ViewBag.error = "Try Again Later";
+                }
+                return View("UpdatePassword");
+            }
+            
             return View();
         }
+        public int UpdatePswd(string newpswd)
+        {
+            if (_signinManager.IsSignedIn(User))  Username = User.Identity.Name;
+            string query = "Update AspNetUsers SET PasswordHash=@newpswd where UserName=@Username;";
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection");
 
+            using (var conn = new SqlConnection(connstr))
+            {
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    newpswd = HashPassword(newpswd);
+                    cmd.Parameters.Add("@newpswd", SqlDbType.NVarChar).Value = newpswd;
+                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
+                    int status = (cmd.ExecuteNonQuery());
+                    conn.Close();
+                    return status;
+                }
+            }
+                    
+        }
         public static string HashPassword(string password)
         {
             byte[] salt;
@@ -169,16 +221,13 @@ namespace MVCapplication.Controllers
             return Convert.ToBase64String(dst);
         }
 
-        public string Update(string previousname, string name, string email, string password, string phno)
+        public int Update(string previousname, string name, string email, string password, string phno)
         {
-            Console.WriteLine("Model class UserName:" + previousname);
+          
             
             string query = "Update AspNetUsers SET NormalizedEmail=@nemail, NormalizedUserName=@nemail, FullName=@name, Email=@email ," +
-                     " UserName=@email,Phonenumber=@phno";
-            if (password == "") query = query + "";
-            else query = query + ",PasswordHash=@password";
-            query = query + " where UserName=@previousname;";
-            Console.WriteLine(query);
+                     " UserName=@email,Phonenumber=@phno where UserName=@previousname;";
+            
             if (email == "") email = previousname;
             var connstr = _config.GetConnectionString("UserIdentityDBConnection");
 
@@ -187,32 +236,19 @@ namespace MVCapplication.Controllers
                 using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
-
-                    var nemail = email.ToUpper();
-                   
-                    if (password != null && password != "")
-                    {
-                        var pswd = HashPassword(password);
-                        cmd.Parameters.AddWithValue("@password", pswd);
-                    }
-                   
+                    var nemail = email.ToUpper();                  
                     cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value = name;
                     cmd.Parameters.AddWithValue("@email", email);
                     cmd.Parameters.AddWithValue("@nemail", nemail);
                     cmd.Parameters.AddWithValue("@phno", phno);
                     cmd.Parameters.Add("@previousname", SqlDbType.NVarChar).Value = previousname;
-                   
-                    string status = (cmd.ExecuteNonQuery()).ToString();
-                  
+                    int status = (cmd.ExecuteNonQuery());
                     conn.Close();
-
                     return status;
-
                 }
             }
+            
         }
-
-
     }
 }
 

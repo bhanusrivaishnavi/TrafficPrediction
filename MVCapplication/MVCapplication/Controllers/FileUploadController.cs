@@ -19,10 +19,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
+using System.Globalization;
+using CsvHelper;
 
 namespace MVCapplication.Controllers
 {
-    // [Authorize]
+    [Authorize]
 
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -38,6 +40,8 @@ namespace MVCapplication.Controllers
 
         public string Username;
 
+
+
         [TempData]
         public string StatusMessage { get; set; }
         public FileUploadController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbcontext, /*UserManager<IdentityUser> userManager,*/ SignInManager<IdentityUser> signinManager, IConfiguration config)
@@ -48,7 +52,7 @@ namespace MVCapplication.Controllers
             _config = config;
 
         }
-       
+
         public ActionResult<string> UploadFileAdo()
         {
             try
@@ -61,17 +65,22 @@ namespace MVCapplication.Controllers
                         FileInfo fi = new FileInfo(file.FileName);
                         var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                         var ext = Path.GetExtension(uniqueFileName);
-                        Console.WriteLine(ext);
-                        if (ext != ".csv")
+
+                        List<string> extensions = new List<string>() {
+                            ".csv",".xls",".xlsx"
+                        };
+
+
+                        if (extensions.Contains(ext) == false)
                         {
-                            StatusMessage = "Only csv Files are Accepted";
+                            StatusMessage = "Only Dataset Files are Accepted";
                             ViewBag.status = StatusMessage;
                             return View("UploadFileAdo");
                         }
 
                         var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + uniqueFileName);
 
-                       
+
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
@@ -97,13 +106,14 @@ namespace MVCapplication.Controllers
                             conn.Open();
 
 
-                            cmd.Parameters.Add("@Username",SqlDbType.NVarChar).SqlValue = Username;
+                            cmd.Parameters.Add("@Username", SqlDbType.NVarChar).SqlValue = Username;
 
                             string name = cmd.ExecuteScalar().ToString();
                             fullname = name;
 
                             conn.Close();
                         }
+                        //@ iss use to prevent SQL Injection
                         var query = "INSERT INTO dbo.FileUploads(" + " UserName, FileName,FullName, FilePath, InsertedOn,IsProcessed " + ") VALUES(" + " @user, @file, @fullname,@filpath,@insert,@process);";
                         using (var conn = new SqlConnection(connstr))
                         using (var cmd = new SqlCommand(query, conn))
@@ -136,8 +146,8 @@ namespace MVCapplication.Controllers
                 StatusMessage = e.Message;
             }
             ViewBag.status = StatusMessage;
-            
-           return View("UploadFileAdo");
+
+            return View("UploadFileAdo");
 
         }
 
@@ -174,21 +184,63 @@ namespace MVCapplication.Controllers
                     result2.Add(reader["InsertedOn"].ToString());
                     result2.Add(reader["FullName"].ToString());
                 }
-               
+                //change the ViewBag Names
+
                 ViewBag.answer = GetData();
                 ViewBag.answer1 = result2;
                 List<String> first = GetProcessedDataID(fname);
-               ViewBag.answer2 = first;
-               ViewBag.answer3 = GetProcessedDataVolume(fname);
+                ViewBag.answer2 = first;
+                ViewBag.answer3 = GetProcessedDataVolume(fname);
                 ViewBag.answer4 = first.Count();
                 conn.Close();
+                ViewBag.usingcsvhelper = GetProcessedData(fname);
                 // return filename;
                 return View("GetFileMetaData");
+                // ViewBag.keys = GetProcessedColumnNames(fname);
+
 
             }
 
-           
+
         }
+
+        public List<dynamic> GetProcessedData(string fname)
+        {
+            //this is sending accidentally to Final folder
+            var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + fname);
+            string pathOnly = Path.GetDirectoryName(path);
+            string fileName = Path.GetFileName(path);
+
+            using (var reader = new StreamReader(path))
+            {
+                var line = reader.ReadLine();
+
+                var values = line.Split(',');
+                ViewBag.ColumnHeaders = values;
+                ViewBag.ColumnCount = values.Length;
+            }
+            using (var reader = new StreamReader(path))
+            {
+                /* var line = reader.ReadLine();
+
+                 var values = line.Split(',');
+                 ViewBag.columns = values.Length;*/
+                using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+
+                    var records = csvReader.GetRecords<dynamic>().ToList();
+
+                    return records;
+                }
+
+            }
+
+
+
+        }
+
+
+
 
         public List<string> GetProcessedDataID(string fname)
         {
@@ -201,7 +253,7 @@ namespace MVCapplication.Controllers
             {
 
                 List<string> listA = new List<string>();
-              List<string> listB = new List<string>();
+                List<string> listB = new List<string>();
                 int c = 0;
                 while (!reader.EndOfStream)
                 {
@@ -225,11 +277,11 @@ namespace MVCapplication.Controllers
             var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + fname);
             string pathOnly = Path.GetDirectoryName(path);
             string fileName = Path.GetFileName(path);
-            
+
             using (var reader = new StreamReader(path))
             {
 
-             
+
                 List<string> listB = new List<string>();
                 int c = 0;
                 while (!reader.EndOfStream)
@@ -244,7 +296,7 @@ namespace MVCapplication.Controllers
                     listB.Add(values[1]);
 
                 }
-           
+
                 return listB;
             }
 
@@ -275,7 +327,7 @@ namespace MVCapplication.Controllers
 
                 while (reader.Read())
                 {
-                                     
+
                     result1.Add(Convert.ToString(reader["FileName"]));
                 }
                 reader.Close();
