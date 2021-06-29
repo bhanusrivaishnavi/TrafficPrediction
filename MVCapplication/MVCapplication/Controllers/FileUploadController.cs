@@ -157,6 +157,7 @@ namespace MVCapplication.Controllers
         [HttpGet]
         public ActionResult<List<string>> GetFileMetaData(string fname)
         {
+           // Console.WriteLine("Action:" + action);
             List<string> result2 = new List<string>();
             if (_signinManager.IsSignedIn(User))
             {
@@ -188,14 +189,18 @@ namespace MVCapplication.Controllers
 
                 ViewBag.answer = GetData();
                 ViewBag.answer1 = result2;
-                List<String> first = GetProcessedDataID(fname);
-                ViewBag.answer2 = first;
-                ViewBag.answer3 = GetProcessedDataVolume(fname);
-                ViewBag.answer4 = first.Count();
+                //List<String> first = GetProcessedDataID(fname);
+                //ViewBag.answer2 = first;
+                //ViewBag.answer3 = GetProcessedDataVolume(fname);
+                //ViewBag.answer4 = first.Count();
                 conn.Close();
+                //Console.WriteLine("Rows "+frm["rows"]);
+               // try { ViewBag.rows = int.Parse(frm["rows"]); }
+                //catch { }
                 ViewBag.usingcsvhelper = GetProcessedData(fname);
                 // return filename;
                 return View("GetFileMetaData");
+
                 // ViewBag.keys = GetProcessedColumnNames(fname);
 
 
@@ -204,6 +209,7 @@ namespace MVCapplication.Controllers
 
         }
 
+     
         public List<dynamic> GetProcessedData(string fname)
         {
             //this is sending accidentally to Final folder
@@ -311,7 +317,7 @@ namespace MVCapplication.Controllers
                 Username = User.Identity.Name;
 
             }
-            Console.WriteLine("The " + Username);
+//            Console.WriteLine("The " + Username);
 
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
             var query = "select * from FileUploads where UserName=@Username;";
@@ -335,7 +341,7 @@ namespace MVCapplication.Controllers
 
 
             }
-            Console.WriteLine(result1);
+           // Console.WriteLine(result1);
             return result1;
         }
         [HttpGet]
@@ -345,7 +351,7 @@ namespace MVCapplication.Controllers
 
 
             result1 = GetData();
-            Console.WriteLine(result1);
+           // Console.WriteLine(result1);
             return result1;
         }
 

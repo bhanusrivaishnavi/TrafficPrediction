@@ -24,6 +24,7 @@
 
     <div class="row">
         <div class="col-md-3">
+            
             <p>List of processed files</p>
             <ul class="navbar nav nav-fill" style="background-color:white;">
 
@@ -32,7 +33,7 @@
                 <li class="nav-item nav-tabs border" style="border-block-color:white;">
                     
                   
-                    <a class="nav-link" href="https://localhost:44300/api/FileUpload/GetFileMetaData?id=1&fname=@value">@value.Substring(37, value.Length - 37 - 4)</a>
+                    <a class="nav-link" href="/api/FileUpload/GetFileMetaData?fname=@value">@value.Substring(37, value.Length - 37 - 4)</a>
                 </li>
                  }
                 </ul>

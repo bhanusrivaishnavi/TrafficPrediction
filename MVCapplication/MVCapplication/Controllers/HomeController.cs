@@ -49,7 +49,7 @@ namespace MVCapplication.Controllers
                 Username = User.Identity.Name;
 
             }
-            Console.WriteLine("Tha " + Username);
+            //Console.WriteLine("Tha " + Username);
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
             var query = "select FullName,PhoneNumber from AspNetUsers where UserName=@Username;";
             using (var conn = new SqlConnection(connstr))
@@ -75,7 +75,7 @@ namespace MVCapplication.Controllers
 
             }
             ViewBag.answer = result1;
-            Console.WriteLine(result1[1]+ ViewBag.answer[0]);
+            //Console.WriteLine(result1[1]+ ViewBag.answer[0]);
             return View();
         }
 
@@ -99,7 +99,7 @@ namespace MVCapplication.Controllers
         public ActionResult<List<string>> HomeView()
         {
             var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
-
+            //Console.WriteLine(rows);
             List<string> result1 = new List<string>();
             if (_signinManager.IsSignedIn(User))
             {
@@ -107,7 +107,7 @@ namespace MVCapplication.Controllers
                 Username = User.Identity.Name;
 
             }
-            Console.WriteLine("Tha " + Username);
+            //Console.WriteLine("Tha " + Username);
 
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
             var query = "select * from FileUploads where UserName=@Username;";
@@ -131,7 +131,7 @@ namespace MVCapplication.Controllers
             }
    
             ViewBag.answer = result1;
-            Console.WriteLine(result1.ToString());
+           // Console.WriteLine(result1.ToString());
             return View();
         }
        
@@ -143,7 +143,7 @@ namespace MVCapplication.Controllers
         [HttpPost]
         public IActionResult UpdateRecord(IFormCollection frm, string action)
         {
-            Console.WriteLine("Controller class"+action);
+           // Console.WriteLine("Controller class"+action);
             
             if (action == "Update")
             {
@@ -154,7 +154,7 @@ namespace MVCapplication.Controllers
                 string email = Convert.ToString(frm["txtEmail"]);
                 string password = frm["txtpswd1"];
                 string phno = frm["txtPhno"];
-                Console.WriteLine(frm["txtuser"]+"PreviousName:"+previousname+"\n"+name + "\n" + email + "\n" + password + "\n" + phno);
+               // Console.WriteLine(frm["txtuser"]+"PreviousName:"+previousname+"\n"+name + "\n" + email + "\n" + password + "\n" + phno);
                 int t= Update(previousname, name, email, password, phno);
                 if (t == 1) ViewBag.status = "Record Updated Successfully!!";
                 else ViewBag.error = "Record Not Updated. Try Again!";
@@ -162,12 +162,12 @@ namespace MVCapplication.Controllers
             }
             if(action=="Change")
             {
-                Console.WriteLine(frm["newpswd"]);
-                Console.WriteLine(frm["newpswd1"]);
+               // Console.WriteLine(frm["newpswd"]);
+                //Console.WriteLine(frm["newpswd1"]);
                 if (frm["newpswd"]!=frm["newpswd1"])
                 {
                     ViewBag.error = "Passwords does not match";
-                    Console.WriteLine(ViewBag.error);
+                   // Console.WriteLine(ViewBag.error);
                 }
                 else
                 {
