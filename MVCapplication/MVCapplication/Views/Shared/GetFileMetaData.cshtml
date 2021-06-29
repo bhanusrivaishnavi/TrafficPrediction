@@ -9,9 +9,9 @@
        
         $(document).ready(function () {
           
-            $("#myInput").on("keyup", function () {
+            $("#search").on("click", function () {
                 delay: 1000;
-                    var value = $(this).val().toLowerCase();
+                    var value = $("#myInput").val().toLowerCase();
                     $("#myTable tr").filter(function () {
                         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                     });
@@ -83,7 +83,7 @@
 
             <div>
 
-                <input id="myInput" type="text" placeholder="Search.."><input id="search" type="submit" value="Go"/>
+                <input id="myInput" type="text" placeholder="Search.."><input id="search" type="submit" value="Go"/><br /><br />
                 @if (ViewBag.usingcsvhelper != null)
                 {
 
