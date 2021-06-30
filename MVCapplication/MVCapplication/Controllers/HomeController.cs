@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols;
 using MVCapplication.Data;
 using MVCapplication.Models;
 using System;
@@ -11,7 +12,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -248,6 +251,42 @@ namespace MVCapplication.Controllers
                 }
             }
             
+        }
+
+        public static bool EmailSend()
+        {
+            bool status = false;
+            try
+            {
+                Console.WriteLine("Sending mail");
+                string HostAddress = "smtp.gmail.com";
+                string FormEmailId = "bbsvaishnavi123@gmail.com";
+                string Password = "AURORA123*";
+                string Port = "587";
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.From = new MailAddress(FormEmailId);
+                mailMessage.Subject = "Sample Email";
+                mailMessage.Body = "To check email sending.";
+                mailMessage.IsBodyHtml = false;
+                mailMessage.To.Add(new MailAddress("bbsvsweety77@gmail.com"));
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = HostAddress;
+                smtp.EnableSsl = true;
+                NetworkCredential networkCredential = new NetworkCredential();
+                networkCredential.UserName = mailMessage.From.Address;
+                networkCredential.Password = Password;
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = networkCredential;
+                smtp.Port = Convert.ToInt32(Port);
+                smtp.Send(mailMessage);
+                status = true;
+                return status;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e+"Mail not sent");
+                return status;
+            }
         }
     }
 }
