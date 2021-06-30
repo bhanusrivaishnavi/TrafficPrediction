@@ -147,36 +147,7 @@ namespace MVCapplication.Controllers
         public IActionResult UpdateRecord(IFormCollection frm, string action)
         {
             // Console.WriteLine("Controller class"+action);
-            try
-            {
-                Console.WriteLine("Sending mail");
-                string HostAddress = "smtp.gmail.com";
-                string FormEmailId = "vassrini962@gmail.com";
-                string Password = "Prakash@7899";
-                string Port = "587";
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(FormEmailId);
-                mailMessage.Subject = "Sample Email";
-                mailMessage.Body = "To check email sending for casestudy development.";
-                mailMessage.IsBodyHtml = false;
-                mailMessage.To.Add(new MailAddress("bbsvaishnavi123@gmail.com"));
-                SmtpClient smtp = new SmtpClient();
-                smtp.Host = HostAddress;
-                smtp.EnableSsl = true;
-                NetworkCredential networkCredential = new NetworkCredential();
-                networkCredential.UserName = mailMessage.From.Address;
-                networkCredential.Password = Password; 
-                smtp.UseDefaultCredentials = false;
-                smtp.Credentials = networkCredential;
-                smtp.Port = Convert.ToInt32(Port);
-                smtp.Send(mailMessage);
-                Console.WriteLine("Mail sent");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e + "Mail not sent");
-                
-            }
+           
             if (action == "Update")
             {
                
