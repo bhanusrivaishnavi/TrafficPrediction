@@ -317,16 +317,18 @@ namespace MVCapplication.Controllers
                 Username = User.Identity.Name;
 
             }
-//            Console.WriteLine("The " + Username);
-
+            //            Console.WriteLine("The " + Username);
+            var flag = "True";
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
-            var query = "select * from FileUploads where UserName=@Username;";
+            var query = "select * from FileUploads where UserName=@Username and IsProcessed=@flag;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.Add(
                    "@Username",
                    SqlDbType.NVarChar).SqlValue = Username;
+                cmd.Parameters.Add("@flag",
+                   SqlDbType.NVarChar).SqlValue = flag;
 
                 conn.Open();
                 var reader = cmd.ExecuteReader();
@@ -358,47 +360,16 @@ namespace MVCapplication.Controllers
         [HttpGet]
         public ActionResult<FileUpload> Download3(int? id, string fname)
         {
-            var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
-            var filename = "";
-            var filepath = "";
-            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
-            var query = "select FilePath from FileUploads  where FileName=@fname;";
-            using (var conn = new SqlConnection(connstr))
-            using (var cmd = new SqlCommand(query, conn))
+
+            var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Final\\" + fname);
+            FileContentResult result1 = new FileContentResult(System.IO.File.ReadAllBytes(path), "text/csv")
             {
-                cmd.Parameters.Add(
-                   "@fname",
-                   SqlDbType.NVarChar).SqlValue = fname;
-
-                conn.Open();
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    filepath = reader.GetString(0);
-                }
-
-                filename = Path.GetFileName(filepath);
-                var filebytes = System.IO.File.ReadAllBytes(filepath);
-
-                var filestream = new MemoryStream(filebytes);
-                result.Content = new StreamContent(filestream);
-                var headers = result.Content.Headers;
-                headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
-                headers.ContentDisposition.Name = filename;
-                headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-                headers.ContentLength = filestream.Length;
-                FileContentResult result1 = new FileContentResult(System.IO.File.ReadAllBytes(filepath), "text/csv")
-                {
-                    FileDownloadName = filename.Substring(37)
-                };
-                conn.Close();
-                return result1;
-
-
-            }
-
+                FileDownloadName = fname.Substring(37)
+            };
+            return result1;
         }
+
+
 
 
     }
@@ -749,3 +720,49 @@ return hexString+"helll";
      }*/
 
 // return count.ToString()+path+csvData;
+
+
+//[HttpGet]
+//public ActionResult<FileUpload> Download3(int? id, string fname)
+//{
+//    var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+//    var filename = "";
+//    var filepath = "";
+//    var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
+//    var query = "select FilePath from FileUploads  where FileName=@fname;";
+//    using (var conn = new SqlConnection(connstr))
+//    using (var cmd = new SqlCommand(query, conn))
+//    {
+//        cmd.Parameters.Add(
+//           "@fname",
+//           SqlDbType.NVarChar).SqlValue = fname;
+
+//        conn.Open();
+//        var reader = cmd.ExecuteReader();
+
+//        while (reader.Read())
+//        {
+//            filepath = reader.GetString(0);
+//        }
+
+//        filename = Path.GetFileName(filepath);
+//        var filebytes = System.IO.File.ReadAllBytes(filepath);
+
+//        var filestream = new MemoryStream(filebytes);
+//        result.Content = new StreamContent(filestream);
+//        var headers = result.Content.Headers;
+//        headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+//        headers.ContentDisposition.Name = filename;
+//        headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+//        headers.ContentLength = filestream.Length;
+//        FileContentResult result1 = new FileContentResult(System.IO.File.ReadAllBytes(filepath), "text/csv")
+//        {
+//            FileDownloadName = filename.Substring(37)
+//        };
+//        conn.Close();
+//        return result1;
+
+
+//    }
+
+//}

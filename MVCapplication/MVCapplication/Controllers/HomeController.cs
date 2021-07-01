@@ -111,14 +111,15 @@ namespace MVCapplication.Controllers
 
             }
             //Console.WriteLine("Tha " + Username);
-
+            var flag = "True";
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
-            var query = "select * from FileUploads where UserName=@Username;";
+            var query = "select * from FileUploads where UserName=@Username and IsProcessed=@flag;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.Add( "@Username",SqlDbType.NVarChar).SqlValue = Username;
-
+                cmd.Parameters.Add("@flag",
+                   SqlDbType.NVarChar).SqlValue = flag;
                 conn.Open();
                 var reader = cmd.ExecuteReader();
 
