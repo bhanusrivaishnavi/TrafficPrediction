@@ -44,9 +44,9 @@
         <div class="col-md-3">
             <p>List of processed files</p>
             <ul class="navbar nav nav-fill" style="background-color:white;">
-                @if (ViewBag.answer != null)
+                @if (ViewBag.filenames != null)
                 {
-                    @foreach (var value in (List<String>)ViewBag.answer)
+                    @foreach (var value in (List<String>)ViewBag.filenames)
                     {
                         <li class="nav-item nav-tabs border" style="border-block-color:white;">
 
@@ -59,22 +59,22 @@
         <div class="col-md-9">
 
             <p>Document Metadata</p>
-            @if (ViewBag.answer1 != null)
+            @if (ViewBag.filedetails != null)
             {
 
 
 
                 <h5>
                     <span class="badge badge-secondary" style="display:inline-block;">Created By&nbsp;:</span>
-                    @ViewBag.answer1[4]
+                    @ViewBag.filedetails[4]
                 </h5>
                 <h5>
                     <span class="badge badge-secondary" style="display:inline;">Created On:</span>
-                    @ViewBag.answer1[3].Substring(0, 10)
+                    @ViewBag.filedetails[3].Substring(0, 10)
                 </h5>
                 <h5>
                     <span class="badge badge-secondary" style="display:inline;">File Info&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
-                    @ViewBag.answer1[1].Substring(37) <a class="buttoncli" href="/api/FileUpload/Download3?fname=@ViewBag.answer1[1]"><img src="~/css/Capture.PNG" alt="Download" width="30" height="30"></a>
+                    @ViewBag.filedetails[1].Substring(37) <a class="buttoncli" href="/api/FileUpload/Download3?fname=@ViewBag.filedetails[1]"><img src="~/css/Capture.PNG" alt="Download" width="30" height="30"></a>
                 </h5>
                                
             }

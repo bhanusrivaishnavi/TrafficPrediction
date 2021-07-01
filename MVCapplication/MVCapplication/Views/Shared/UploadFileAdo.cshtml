@@ -50,6 +50,12 @@
                 @ViewBag.status
             </div>
         }
+        @if (ViewBag.error != null)
+        {
+            <div class="alert alert-danger" style="width:500px;margin:auto;" role="alert">
+                @ViewBag.error
+            </div>
+        }
 
     </form>
 
