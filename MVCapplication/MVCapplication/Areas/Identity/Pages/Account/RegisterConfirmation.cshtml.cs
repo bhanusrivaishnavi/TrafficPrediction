@@ -62,7 +62,7 @@ namespace MVCapplication.Areas.Identity.Pages.Account
                     Console.WriteLine("Sending mail");
                     var gmail = await _userManager.FindByEmailAsync(email);
                     string HostAddress = "smtp.gmail.com";
-                    string FormEmailId = "vassrini962@gmail.com";
+                    string FormEmailId = "trafficprediction789@gmail.com";
                     string Password = "Prakash@7899";
                     string Port = "587";
                     MailMessage mailMessage = new MailMessage();

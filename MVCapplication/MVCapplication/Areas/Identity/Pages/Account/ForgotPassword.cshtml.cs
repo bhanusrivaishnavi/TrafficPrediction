@@ -63,14 +63,14 @@ namespace MVCapplication.Areas.Identity.Pages.Account
                     Console.WriteLine("Sending mail");
                    // var gmail = await _userManager.FindByEmailAsync(email);
                     string HostAddress = "smtp.gmail.com";
-                    string FormEmailId = "vassrini962@gmail.com";
+                    string FormEmailId = "trafficprediction789@gmail.com";
                     string Password = "Prakash@7899";
                     string Port = "587";
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.From = new MailAddress(FormEmailId);
                     mailMessage.Subject = "Confirmation Email";
                     string body = "<a href= " + callbackUrl+">Click Here</a>";
-                    Console.WriteLine(body);
+                   // Console.WriteLine(body);
                     mailMessage.Body = "Click the link below to reset your password.\n\n" + body;
                     mailMessage.IsBodyHtml = true;
                     mailMessage.To.Add(new MailAddress(Input.Email));
