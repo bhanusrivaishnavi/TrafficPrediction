@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Temp\" />
+    <Folder Include="wwwroot\Graphs\" />
   </ItemGroup>
 
 </Project>

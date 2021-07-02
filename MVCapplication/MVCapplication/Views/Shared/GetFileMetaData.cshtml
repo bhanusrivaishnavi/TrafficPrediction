@@ -34,6 +34,8 @@
             background-color: black;
             color: white;
         }
+
+       
     </style>
     <br />
     <div class="jumbotron h-25 w-100 p-3 mt-3 text-light" style="background-color:dimgrey">
@@ -61,9 +63,6 @@
             <p>Document Metadata</p>
             @if (ViewBag.filedetails != null)
             {
-
-
-
                 <h5>
                     <span class="badge badge-secondary" style="display:inline-block;">Created By&nbsp;:</span>
                     @ViewBag.filedetails[4]
@@ -76,13 +75,36 @@
                     <span class="badge badge-secondary" style="display:inline;">File Info&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
                     @ViewBag.filedetails[1].Substring(37) <a class="buttoncli" href="/api/FileUpload/Download3?fname=@ViewBag.filedetails[1]"><img src="~/css/Capture.PNG" alt="Download" width="30" height="30"></a>
                 </h5>
-                               
+               
             }
             <br />
             <p>Dataset</p>
 
             <div>
-              
+                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalCenter">
+                    Visualize
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" style=" max-height: 100%; height: auto; max-width: 100%; width: auto; padding-left:10px;" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Visualization</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                @{
+                                    string file = ViewBag.filedetails[1];
+                                    file = file.Replace(".csv", ".png");
+                                    <img src="~/Graphs/@file" />
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <input id="myInput" style="float:right;" type="text" placeholder="Search.."><a id="search" style="float: right;"><img src="~/css/Capture1.PNG" alt="Go" width="30" height="30"></a><br /><br />
                 @if (ViewBag.usingcsvhelper != null)
                 {
@@ -119,7 +141,7 @@
                 }
             </div>
         </div>
-    </div>
+        </div>
 
 
 </body>

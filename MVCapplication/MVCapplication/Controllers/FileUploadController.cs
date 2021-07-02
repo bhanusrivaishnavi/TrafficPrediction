@@ -148,6 +148,7 @@ namespace MVCapplication.Controllers
                 ViewBag.filenames = GetData();
                 ViewBag.filedetails = result2;
                 conn.Close();
+               
                 ViewBag.usingcsvhelper = GetProcessedData(fname);
                 return View("GetFileMetaData");
             }

@@ -136,9 +136,16 @@ namespace MVCapplication.Controllers
                 string email = Convert.ToString(frm["txtEmail"]);
                 string password = frm["txtpswd1"];
                 string phno = frm["txtPhno"];
-                int t= Update(previousname, name, email, password, phno);
-                if (t == 1) ViewBag.status = "Record Updated Successfully!!";
-                else ViewBag.error = "Record Not Updated. Try Again!";
+                try
+                {
+                    int t = Update(previousname, name, email, password, phno);
+                    if (t == 1) ViewBag.status = "Record Updated Successfully!!";
+                    else ViewBag.error = "Record Not Updated. Try Again!";
+                }
+                catch(Exception )
+                {
+                    ViewBag.error="Error: Username already exists.";
+                }
                 return View("UpdateUser");
             }
             if(action=="Change")
@@ -202,11 +209,21 @@ namespace MVCapplication.Controllers
         public int Update(string previousname, string name, string email, string password, string phno)
         {                   
             string query = "Update AspNetUsers SET NormalizedEmail=@nemail, NormalizedUserName=@nemail, FullName=@name, Email=@email ," +
-                     " UserName=@email,Phonenumber=@phno where UserName=@previousname;";           
+                     " UserName=@email,Phonenumber=@phno where UserName=@previousname;";
+            string query1 = "Update FileUploads SET UserName=@email, FullName=@name where UserName=@previousname;";
             if (email == "") email = previousname;
             var connstr = _config.GetConnectionString("UserIdentityDBConnection");
             using (var conn = new SqlConnection(connstr))
             {
+                using (var cmd = new SqlCommand(query1, conn))
+                {
+                    conn.Open();
+                    cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value = name;
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.Add("@previousname", SqlDbType.NVarChar).Value = previousname;
+                    int status = (cmd.ExecuteNonQuery());
+                    conn.Close();
+                }
                 using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
