@@ -18,7 +18,9 @@ from sklearn.ensemble import AdaBoostRegressor
 import math
 import matplotlib.pyplot as plt
 
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sia = SentimentIntensityAnalyzer()
 
 def nlp_wd(text):
@@ -158,7 +160,9 @@ def process(request):
         plt.xlabel("Traffic Volume Range")
         plt.ylabel("No. of rows within the range")
         plt.title("Traffic Volume Prediction")
-        path = r'C:\Users\Vaishnavi\source\repos\TrafficPrediction\MVCapplication\MVCapplication\wwwroot\Graphs'
+
+        path = str(BASE_DIR)+ r"\MVCapplication\MVCapplication\wwwroot\Graphs"
+        print(path)
         file_name = each_file.split('\\')[-1]
         file_name = file_name.replace(".csv",".png")
         path = os.path.join(path,file_name)
@@ -167,8 +171,13 @@ def process(request):
     
     update_db(conn)
     conn.commit()
-
-    return redirect('https://localhost:44300/Home/HomeView')
+    try:
+        return redirect('https://localhost:44300/Home/HomeView')
+    except:
+        try:
+            return redirect('https://localhost:5001/Home/HomeView')
+        except:
+            return redirect('https://localhost:5000/Home/HomeView')
     
 
 
@@ -183,7 +192,8 @@ def homePage(request):
 
 
 def view_stats(request, file_name):
-    path = r'C:\Users\Vaishnavi\source\repos\TrafficPrediction\MVCapplication\MVCapplication\Final'
+    path = str(BASE_DIR)+ r"\MVCapplication\MVCapplication\Final"
+    print(path)
     path = os.path.join(path,file_name)
     df = pd.read_csv(path)
     max_value = df['Traffic Volume'].max()

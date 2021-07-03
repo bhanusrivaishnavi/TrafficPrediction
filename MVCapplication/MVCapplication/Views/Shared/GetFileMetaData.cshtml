@@ -89,14 +89,16 @@
                     <div class="modal-dialog modal-dialog-centered modal-lg" style=" max-height: 100%; height: auto; max-width: 100%; width: 850px; padding-left:10px;" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Visualization</h5>
-                                <a href="http://127.0.0.1:8000/view_stats/@ViewBag.filedetails[1]" target="_blank"><button type="button" class="btn btn-info">Process Files</button></a>
-
+                                <h5 class="modal-title" id="exampleModalLongTitle">Visualization</h5> 
+                                
+                                
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
+                                <a href="http://127.0.0.1:8000/view_stats/@ViewBag.filedetails[1]" target="_blank"><button type="button" class="btn btn-success">View Stats</button></a>
+
                                 @{
                                     string file = ViewBag.filedetails[1];
                                     file = file.Replace(".csv", ".png");
