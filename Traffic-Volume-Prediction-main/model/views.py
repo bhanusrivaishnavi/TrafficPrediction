@@ -171,14 +171,7 @@ def process(request):
     
     update_db(conn)
     conn.commit()
-    try:
-        return redirect('https://localhost:44300/Home/HomeView')
-    except:
-        try:
-            return redirect('https://localhost:5001/Home/HomeView')
-        except:
-            return redirect('https://localhost:5000/Home/HomeView')
-    
+    return redirect('https://localhost:44300/Home/HomeView')
 
 
 def homePage(request):
