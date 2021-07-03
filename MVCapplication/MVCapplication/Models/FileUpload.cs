@@ -34,8 +34,7 @@ namespace MVCapplication.Models
         [Column(TypeName = "varchar(max)")]
         public string IsProcessed { get; set; }
 
-        public string StatusMessage { get; set; }
-
+      
         [Column(TypeName = "varchar(max)")]
         public string FullName { get; set; }
 
