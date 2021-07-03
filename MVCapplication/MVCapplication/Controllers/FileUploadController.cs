@@ -50,6 +50,7 @@ namespace MVCapplication.Controllers
             _config = config;
         }
 
+        //Uploading files using ado.net
         public ActionResult<string> UploadFileAdo()
         {
             try
@@ -154,11 +155,13 @@ namespace MVCapplication.Controllers
             }
         }
 
+
+        //get the columns form the csv file
         public List<dynamic> GetProcessedData(string fname)
         {
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
             var query = "select IsProcessed from FileUploads where UserName=@Username and FileName=@fname;";
-            var processed = "False";
+            var processed = "false";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
             {
@@ -168,7 +171,7 @@ namespace MVCapplication.Controllers
                 processed = cmd.ExecuteScalar().ToString();
             }
             var path = "";
-            if (processed == "True")
+            if (processed == "true")
             {
                 path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Final\\" + fname);
                 string pathOnly = Path.GetDirectoryName(path);
@@ -196,13 +199,14 @@ namespace MVCapplication.Controllers
             }
         }
 
+        //Get the files data from database
         public List<string> GetData()
         {
             if (_signinManager.IsSignedIn(User))
             {
                 Username = User.Identity.Name;
             }
-            var flag = "True";
+            var flag = "true";
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
             var query = "select * from FileUploads where UserName=@Username and IsProcessed=@flag;";
             using (var conn = new SqlConnection(connstr))
@@ -222,6 +226,7 @@ namespace MVCapplication.Controllers
             return result1;
         }
 
+        //Send data to the homeview
         [HttpGet]
         public ActionResult<List<string>> HomeView()
         {
@@ -230,8 +235,9 @@ namespace MVCapplication.Controllers
             return result1;
         }
 
+        //Function to download
         [HttpGet]
-        public ActionResult<FileUpload> Download3(int? id, string fname)
+        public ActionResult<FileUpload> Download(int? id, string fname)
         {
             var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Final\\" + fname);
             FileContentResult result1 = new FileContentResult(System.IO.File.ReadAllBytes(path), "text/csv")

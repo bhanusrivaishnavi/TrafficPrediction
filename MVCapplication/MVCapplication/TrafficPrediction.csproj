@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Final\" />
     <Folder Include="Temp\" />
     <Folder Include="wwwroot\Graphs\" />
   </ItemGroup>

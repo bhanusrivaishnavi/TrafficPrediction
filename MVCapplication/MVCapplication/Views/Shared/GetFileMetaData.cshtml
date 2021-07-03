@@ -73,7 +73,7 @@
                 </h5>
                 <h5>
                     <span class="badge badge-secondary" style="display:inline;">File Info&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
-                    @ViewBag.filedetails[1].Substring(37) <a class="buttoncli" href="/api/FileUpload/Download3?fname=@ViewBag.filedetails[1]"><img src="~/css/Capture.PNG" alt="Download" width="30" height="30"></a>
+                    @ViewBag.filedetails[1].Substring(37) <a class="buttoncli" href="/api/FileUpload/Download?fname=@ViewBag.filedetails[1]"><img src="~/css/Capture.PNG" alt="Download" width="30" height="30"></a>
                 </h5>
                
             }
@@ -86,10 +86,12 @@
                 </button>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg" style=" max-height: 100%; height: auto; max-width: 100%; width: auto; padding-left:10px;" role="document">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" style=" max-height: 100%; height: auto; max-width: 100%; width: 850px; padding-left:10px;" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">Visualization</h5>
+                                <a href="http://127.0.0.1:8000/view_stats/@ViewBag.filedetails[1]" target="_blank"><button type="button" class="btn btn-info">Process Files</button></a>
+
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

@@ -41,7 +41,8 @@ namespace MVCapplication.Controllers
         {
             return View();
         }
-       
+         
+        //To show the data in User management
         public ActionResult<List<String>> UpdateUser()
         {
             var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
@@ -89,6 +90,7 @@ namespace MVCapplication.Controllers
             return View();
         }
 
+        //To show the list of processed files in home page
         [HttpGet]
         public ActionResult<List<string>> HomeView()
         {
@@ -98,7 +100,7 @@ namespace MVCapplication.Controllers
             {
                 Username = User.Identity.Name;
             }
-            var flag = "True";
+            var flag = "true";
             var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
             var query = "select * from FileUploads where UserName=@Username and IsProcessed=@flag;";
             using (var conn = new SqlConnection(connstr))
@@ -124,6 +126,7 @@ namespace MVCapplication.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        //Input from the Update user form and Update password form
         [HttpPost]
         public IActionResult UpdateRecord(IFormCollection frm, string action)
         {
@@ -167,6 +170,7 @@ namespace MVCapplication.Controllers
             return View();
         }
 
+        //Function from the Update record to update the password 
         public int UpdatePswd(string newpswd)
         {
             if (_signinManager.IsSignedIn(User))  Username = User.Identity.Name;
@@ -187,6 +191,7 @@ namespace MVCapplication.Controllers
             }                   
         }
 
+        //Password hash to update the password
         public static string HashPassword(string password)
         {
             byte[] salt;
@@ -206,6 +211,7 @@ namespace MVCapplication.Controllers
             return Convert.ToBase64String(dst);
         }
 
+        //Function from update record to update the details
         public int Update(string previousname, string name, string email, string password, string phno)
         {                   
             string query = "Update AspNetUsers SET NormalizedEmail=@nemail, NormalizedUserName=@nemail, FullName=@name, Email=@email ," +

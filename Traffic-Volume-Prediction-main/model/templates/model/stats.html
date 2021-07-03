@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+
+    <!--Chart js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
+    <title>Statistics</title>
+</head>
+<body>
+    
+    <center>
+        <h1 style="margin : 40px">
+            File name : {{file_name}}
+        </h1>
+    </center>
+
+    <div class="col-md-8">
+        <canvas id="myChart" width="400" height="250"></canvas>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for label in labels %}'{{label}}',{%endfor%}],
+        datasets: [{
+            label: 'Traffic Volume Predictions',
+            data: [{% for freq in freqs %}{{freq}},{%endfor%}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            xAxes: [ {
+          type: 'time',
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Date'
+          },
+          ticks: {
+            major: {
+              fontStyle: 'bold',
+              fontColor: '#FF0000'
+            }
+          }
+        } ],
+            
+            y: {
+                
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+    </div>
+
+   
+
+</body>
+</html>

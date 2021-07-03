@@ -1,0 +1,14 @@
+
+    df = pd.read_csv(r'C:\Users\Dell\OneDrive\Desktop\Final_Traffic_Data\TrafficVolume_Train.csv')
+    train_df = prepare_train(df)
+    (X_train, Y_train) = (train_df.drop(['Traffic Volume', 'ID', 'Cloud'], axis = 1).values, train_df['Traffic Volume'].values)
+    
+    X_train = scaler.fit_transform(X_train)
+
+
+
+
+
+    
+        rfreg = RandomForestRegressor(n_estimators = 50, max_depth = 12, min_samples_split = 5)
+        rfreg.fit(X_train, Y_train)
