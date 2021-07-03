@@ -56,7 +56,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Input.Email"></label>
-                        <input name="txtEmail" value="@User.Identity.Name" asp-for="Input.Email" class="form-control" />
+                        <input name="txtEmail" value="@User.Identity.Name" asp-for="Input.Email" class="form-control" readonly/>
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
 
