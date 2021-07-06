@@ -4,19 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Protocols;
 using MVCapplication.Data;
 using MVCapplication.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Mail;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 
 namespace MVCapplication.Controllers
 {

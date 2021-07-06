@@ -7,17 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-
-using System.Security.Claims;
 using System.Net.Http;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
-using MVCapplication.Data.Migrations;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
 using CsvHelper;
