@@ -7,7 +7,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <!--Chart js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
     <title>Statistics</title>
@@ -20,63 +20,79 @@
         </h1>
     </center>
 
-    <div class="col-md-8">
-        <canvas id="myChart" width="400" height="250"></canvas>
-<script>
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: [{% for label in labels %}'{{label}}',{%endfor%}],
-        datasets: [{
-            label: 'Traffic Volume Predictions',
-            data: [{% for freq in freqs %}{{freq}},{%endfor%}],
-            backgroundColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            xAxes: [ {
-          type: 'time',
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: 'Date'
-          },
-          ticks: {
-            major: {
-              fontStyle: 'bold',
-              fontColor: '#FF0000'
-            }
-          }
-        } ],
-            
-            y: {
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="myChart" width="400" height="250"></canvas>
+    <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for label in labels %}'{{label}}',{%endfor%}],
+            datasets: [{
+                label: 'Traffic Volume Predictions',
+                data: [{% for freq in freqs %}{{freq}},{%endfor%}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                xAxes: [ {
+              type: 'time',
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Date'
+              },
+              ticks: {
+                major: {
+                  fontStyle: 'bold',
+                  fontColor: '#FF0000'
+                }
+              }
+            } ],
                 
-                beginAtZero: true
+                y: {
+                    
+                    beginAtZero: true
+                }
             }
         }
-    }
-});
-</script>
+    });
+    </script>
+        </div>
+    
+        <div class="col-md-6" style="margin-top: 130px;">
+    
+            <div class="jumbotron">
+        
+            <h3> Root Mean Squared Error : {{rmse}}</h3>
+            <h3> Coefficient of Determination : {{cod}}</h3>
+            </div>
+    
+    
+        </div>
     </div>
+
+
+
 
    
 

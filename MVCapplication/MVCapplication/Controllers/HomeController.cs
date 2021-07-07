@@ -130,7 +130,7 @@ namespace MVCapplication.Controllers
                
                 UpdateUser model = new UpdateUser();
                 string previousname = frm["txtuser"];
-                string name = frm["txtFName"] + " "+ frm["txtLName"];
+                string name = frm["txtFName"];
                 string email = Convert.ToString(frm["txtEmail"]);
                 string password = frm["txtpswd1"];
                 string phno = frm["txtPhno"];

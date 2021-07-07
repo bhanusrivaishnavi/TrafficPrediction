@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -36,7 +35,7 @@ namespace MVCapplication.Controllers
         [TempData]
         public string StatusMessage { get; set; }
 
-        public FileUploadController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbcontext, /*UserManager<IdentityUser> userManager,*/ SignInManager<IdentityUser> signinManager, IConfiguration config)
+        public FileUploadController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbcontext, SignInManager<IdentityUser> signinManager, IConfiguration config)
         {
             _hostingEnvironment = hostingEnvironment;
             _dbcontext = dbcontext;
@@ -55,9 +54,10 @@ namespace MVCapplication.Controllers
                     foreach (var file in files)
                     {
                         FileInfo fi = new FileInfo(file.FileName);
+
                         var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                         var ext = Path.GetExtension(uniqueFileName);
-                        List<string> extensions = new List<string>() { ".csv",".xls",".xlsx"  };
+                        List<string> extensions = new List<string>() { ".csv", ".xls", ".xlsx" };
                         if (extensions.Contains(ext) == false)
                         {
                             ViewBag.error = "Only Dataset Files are Accepted";
@@ -74,8 +74,8 @@ namespace MVCapplication.Controllers
                             Username = User.Identity.Name;
                         }
                         var query1 = "Select FullName from dbo.AspNetUsers where UserName=@Username;";
-                        var connstr = _config.GetConnectionString("UserIdentityDBConnection");//"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";// "Server=PRAKASH; Database=user; Trusted_Connection=true;";
-                        var fullname = "hi";
+                        var connstr = _config.GetConnectionString("UserIdentityDBConnection");
+                        var fullname = "";
                         using (var conn = new SqlConnection(connstr))
                         using (var cmd = new SqlCommand(query1, conn))
                         {
@@ -85,7 +85,7 @@ namespace MVCapplication.Controllers
                             fullname = name;
                             conn.Close();
                         }
-                        //@ iss use to prevent SQL Injection
+
                         var query = "INSERT INTO dbo.FileUploads(" + " UserName, FileName,FullName, FilePath, InsertedOn,IsProcessed " + ") VALUES(" + " @user, @file, @fullname,@filpath,@insert,@process);";
                         using (var conn = new SqlConnection(connstr))
                         using (var cmd = new SqlCommand(query, conn))
@@ -115,16 +115,16 @@ namespace MVCapplication.Controllers
             return View("UploadFileAdo");
         }
 
-        //posting meta data 
+
         [HttpGet]
         public ActionResult<List<string>> GetFileMetaData(string fname)
         {
-            List<string> result2 = new List<string>();
+            List<string> meta_data = new List<string>();
             if (_signinManager.IsSignedIn(User))
             {
                 Username = User.Identity.Name;
             }
-            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection");
             var query = "select * from FileUploads where FileName=@fname;";
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
@@ -134,47 +134,61 @@ namespace MVCapplication.Controllers
                 var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    result2.Add(reader["FilePath"].ToString());
-                    result2.Add(reader["FileName"].ToString());
-                    result2.Add(reader["UserName"].ToString());
-                    result2.Add(reader["InsertedOn"].ToString());
-                    result2.Add(reader["FullName"].ToString());
+                    meta_data.Add(reader["FullName"].ToString());
+
+                    meta_data.Add(reader["InsertedOn"].ToString());
+
+                    meta_data.Add(reader["FileName"].ToString());
+
+
+
                 }
                 ViewBag.filenames = GetData();
-                ViewBag.filedetails = result2;
+                ViewBag.filedetails = meta_data;
                 conn.Close();
-               
+
                 ViewBag.usingcsvhelper = GetProcessedData(fname);
                 return View("GetFileMetaData");
             }
         }
 
-
-        //get the columns form the csv file
-        public List<dynamic> GetProcessedData(string fname)
+        //Get the list of names of processed files from database
+        public List<string> GetData()
         {
-            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
-            var query = "select IsProcessed from FileUploads where UserName=@Username and FileName=@fname;";
-            var processed = "false";
+            if (_signinManager.IsSignedIn(User))
+            {
+                Username = User.Identity.Name;
+            }
+            var flag = "true";
+            var connstr = _config.GetConnectionString("UserIdentityDBConnection");
+            var query = "select * from FileUploads where UserName=@Username and IsProcessed=@flag;";
+            var Processed_files = new List<string>();
             using (var conn = new SqlConnection(connstr))
             using (var cmd = new SqlCommand(query, conn))
             {
-                cmd.Parameters.Add( "@Username", SqlDbType.NVarChar).SqlValue = Username;
-                cmd.Parameters.Add("@fname", SqlDbType.NVarChar).SqlValue = fname;
+                cmd.Parameters.Add("@Username", SqlDbType.NVarChar).SqlValue = Username;
+                cmd.Parameters.Add("@flag", SqlDbType.NVarChar).SqlValue = flag;
                 conn.Open();
-                processed = cmd.ExecuteScalar().ToString();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Processed_files.Add(Convert.ToString(reader["FileName"]));
+                }
+                reader.Close();
+                conn.Close();
             }
-            var path = "";
-            if (processed == "true")
-            {
-                path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Final\\" + fname);
-                string pathOnly = Path.GetDirectoryName(path);
-                string fileName = Path.GetFileName(path);
-            }
-            else
-            {
-                path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Temp\\" + fname);
-            }
+            return Processed_files;
+        }
+
+
+        //get the records from the csv file
+        public List<dynamic> GetProcessedData(string fname)
+        {
+
+            var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Final\\" + fname);
+
+
+
             using (var reader = new StreamReader(path))
             {
                 var line = reader.ReadLine();
@@ -185,7 +199,7 @@ namespace MVCapplication.Controllers
             }
             using (var reader = new StreamReader(path))
             {
-                 using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+                using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                     var records = csvReader.GetRecords<dynamic>().ToList();
                     return records;
@@ -193,52 +207,19 @@ namespace MVCapplication.Controllers
             }
         }
 
-        //Get the files data from database
-        public List<string> GetData()
-        {
-            if (_signinManager.IsSignedIn(User))
-            {
-                Username = User.Identity.Name;
-            }
-            var flag = "true";
-            var connstr = _config.GetConnectionString("UserIdentityDBConnection"); //"Server=DESKTOP-JUH932N\\SQLEXPRESS; Database=user; Trusted_Connection=true;";//"Server=PRAKASH; Database=user; Trusted_Connection=true;";
-            var query = "select * from FileUploads where UserName=@Username and IsProcessed=@flag;";
-            using (var conn = new SqlConnection(connstr))
-            using (var cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.Add( "@Username", SqlDbType.NVarChar).SqlValue = Username;
-                cmd.Parameters.Add("@flag", SqlDbType.NVarChar).SqlValue = flag;
-                conn.Open();
-                var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    result1.Add(Convert.ToString(reader["FileName"]));
-                }
-                reader.Close();
-                conn.Close();
-            }
-            return result1;
-        }
 
-        //Send data to the homeview
-        [HttpGet]
-        public ActionResult<List<string>> HomeView()
-        {
-            var result = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
-            result1 = GetData();
-            return result1;
-        }
+
 
         //Function to download
         [HttpGet]
-        public ActionResult<FileUpload> Download(int? id, string fname)
+        public ActionResult<FileUpload> Download(string fname)
         {
             var path = Path.Combine("", _hostingEnvironment.ContentRootPath + "\\Final\\" + fname);
-            FileContentResult result1 = new FileContentResult(System.IO.File.ReadAllBytes(path), "text/csv")
+            FileContentResult downloaded = new FileContentResult(System.IO.File.ReadAllBytes(path), "text/csv")
             {
                 FileDownloadName = fname.Substring(37)
             };
-            return result1;
+            return downloaded;
         }
 
     }
