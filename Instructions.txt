@@ -1,0 +1,32 @@
+To run the application, run dotnet application along with the ml model with django.
+-------------------
+Before running the dotnet application,
+
+--> in appsettings.json - change the server name in the connection string with the local database name
+
+--> execute the commands
+ "cd MVCapplication" and "Update-database" in the package manager console
+
+Then run the IIS Express
+
+------------------
+Before running the django-ml model
+
+-->In Traffic-Volume-Prediction-main goto  model->views.py, change the database name in the line 62
+
+-->hover to the file Traffic-Volume-Prediction-main and run "cmd" in the path
+
+-->After opening the cmd, execute the following commands to run the django application
+
+  --pip install requirements.txt
+  --python manage.py runserver
+
+--------------------
+ When the application runs, and an error raises when "process files" button is clicked in the home page
+  
+ Remove the pickel files "vector.pickel" and "regressor" and continue
+ 
+ Go to Traffic-Volume-Prediction-main file and run the "pickle-file.py" in the cmd with the command 
+          ----       python pickle-file.py
+ It might take some time upto 5 minutes as the model is getting trained.
+ Later execute the command "python manage.py runserver" and continue to the web application directly 
